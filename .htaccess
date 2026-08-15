@@ -1,0 +1,68 @@
+# =============================================================================
+# PROCIV Urban Group — sitio estático en SiteGround
+#
+# Ubica este archivo junto a index.html (normalmente /public_html/.htaccess
+# o /public_html/prociv/.htaccess si el sitio va en un subdirectorio).
+#
+# OJO: en SiteGround el File Manager oculta los archivos que empiezan por punto.
+# Actívalos con el icono de "Settings → Show hidden files" antes de subirlo.
+# =============================================================================
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ── Forzar HTTPS ─────────────────────────────────────────────────────────
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # ── Forzar www (descomenta si tu dominio canónico lleva www) ─────────────
+    # RewriteCond %{HTTP_HOST} !^www\. [NC]
+    # RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [L,R=301]
+
+    # ── Quitar index.html de la URL ──────────────────────────────────────────
+    RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
+    RewriteRule ^(.*)index\.html$ /$1 [R=301,L]
+</IfModule>
+
+# ── Compresión ───────────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+        application/javascript application/json image/svg+xml
+</IfModule>
+
+# ── Caché de estáticos ───────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css                "access plus 1 year"
+    ExpiresByType application/javascript  "access plus 1 year"
+    ExpiresByType image/svg+xml           "access plus 1 year"
+    ExpiresByType image/jpeg              "access plus 1 year"
+    ExpiresByType image/png               "access plus 1 year"
+    ExpiresByType image/webp              "access plus 1 year"
+    ExpiresByType video/mp4               "access plus 1 year"
+    ExpiresByType text/html               "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+    # index.html siempre fresco (para que los cambios se vean al instante)
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # Cabeceras de seguridad básicas
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ── Tipos MIME (por si el servidor no los reconoce) ──────────────────────────
+<IfModule mod_mime.c>
+    AddType video/mp4 .mp4
+    AddType image/svg+xml .svg
+    AddType image/webp .webp
+</IfModule>
+
+# ── Página 404 ───────────────────────────────────────────────────────────────
+ErrorDocument 404 /index.html
