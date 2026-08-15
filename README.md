@@ -100,7 +100,7 @@ Abre `assets/js/main.js`, primeras líneas:
 
 ```js
 var FORM_ENDPOINT = '';                          // ← vacío = abre el correo del visitante
-var FORM_EMAIL    = 'info@procivurbangroup.com'; // ← destino del mailto
+var FORM_EMAIL    = 'contacto@prociv.co'; // ← destino del mailto
 ```
 
 - **Sin tocar nada:** al enviar, se abre el cliente de correo del visitante con
@@ -111,8 +111,8 @@ var FORM_EMAIL    = 'info@procivurbangroup.com'; // ← destino del mailto
 - **Con un servicio externo** (Formspree, Web3Forms…): pega su URL en
   `FORM_ENDPOINT`; casi todos aceptan JSON.
 
-También hay un enlace de WhatsApp en el footer: cambia `573000000000` por tu
-número real.
+El footer ya incluye los datos de contacto de PROCIV: Calle 101 #70G-53,
+Bogotá · WhatsApp y teléfono +57 324 650 8105 · contacto@prociv.co.
 
 ---
 

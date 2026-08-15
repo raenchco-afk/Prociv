@@ -11,7 +11,7 @@
      FORM_EMAIL: destino del mailto cuando no hay endpoint.
      ───────────────────────────────────────────────────────────────────────── */
   var FORM_ENDPOINT = '';
-  var FORM_EMAIL = 'info@procivurbangroup.com';
+  var FORM_EMAIL = 'contacto@prociv.co';
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

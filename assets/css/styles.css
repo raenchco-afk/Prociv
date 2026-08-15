@@ -137,10 +137,13 @@ h1, h2, h3 { font-weight: 400; line-height: 1.05; letter-spacing: -0.03em; }
   letter-spacing: -0.025em;
   line-height: 1;
   display: flex;
-  align-items: baseline;
-  gap: .5rem;
+  align-items: center;
+  gap: .625rem;
 }
+.brand-mark { display: block; flex: 0 0 auto; width: 2.5rem; height: auto; border-radius: .5rem; }
 .nav__logo-sub {
+  display: block;
+  margin-top: .3rem;
   font-size: .625rem;
   font-weight: 400;
   letter-spacing: .22em;
@@ -519,8 +522,9 @@ h1, h2, h3 { font-weight: 400; line-height: 1.05; letter-spacing: -0.03em; }
 @media (min-width: 700px)  { .footer__grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) { .footer__grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 3rem; } }
 
-.footer__brand { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; }
-.footer__brand span {
+.footer__brand { display: flex; align-items: center; gap: .875rem; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; }
+.footer__brand .brand-mark { width: 3rem; }
+.footer__brand-sub {
   display: block; font-size: .625rem; font-weight: 400;
   letter-spacing: .24em; text-transform: uppercase; color: var(--concrete); margin-top: .35rem;
 }
