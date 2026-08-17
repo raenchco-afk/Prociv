@@ -1,371 +1,977 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark scroll-smooth">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PROCIV Urban Group — Progreso. Ciudad. Valor.</title>
-<meta name="description" content="PROCIV Urban Group desarrolla proyectos urbanos para una nueva generación que busca más que espacio: diseño, ubicación, experiencia y valor.">
-<meta name="theme-color" content="#111111">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROCIV Urban Group — El Futuro se Construye desde el Origen</title>
+  <meta name="description" content="Renovación urbana y valor inmobiliario de alto impacto en Colombia. Transformación estratégica desde el suelo hasta rascacielos icónicos de alta plusvalía.">
+  <meta name="theme-color" content="#000000">
 
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="PROCIV Urban Group">
-<meta property="og:title" content="PROCIV Urban Group — Progreso. Ciudad. Valor.">
-<meta property="og:description" content="Hacemos ciudad para quienes están construyendo el futuro.">
-<meta property="og:locale" content="es_CO">
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PROCIV Urban Group">
+  <meta property="og:title" content="PROCIV Urban Group — El Futuro se Construye desde el Origen">
+  <meta property="og:description" content="Desarrollo y renovación inmobiliaria en Colombia. Arquitectura vanguardista, ubicación estratégica y plusvalía garantizada.">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:image" content="assets/img/prociv-logo-navy.png">
 
-<link rel="icon" href="assets/img/prociv-icono-blanco.png" type="image/png">
-<link rel="canonical" href="https://www.procivurbangroup.com/">
+  <link rel="icon" href="assets/img/prociv-icono-blanco.png" type="image/png">
+  <link rel="canonical" href="https://www.procivurbangroup.com/">
 
-<!-- Tipografía: Inter 300/400/500/600 -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Plus Jakarta Sans', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              black: '#000000',
+              dark: '#080808',
+              card: '#121212',
+              cardHover: '#18181b',
+              emerald: '#00E599',
+              emeraldDark: '#00B377',
+              blue: '#2997FF',
+              titanium: '#86868b',
+              border: 'rgba(255, 255, 255, 0.08)',
+              borderLight: 'rgba(255, 255, 255, 0.15)',
+            }
+          },
+          boxShadow: {
+            'glow-emerald': '0 0 40px -10px rgba(0, 229, 153, 0.3)',
+            'glow-blue': '0 0 40px -10px rgba(41, 151, 255, 0.3)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons & GSAP + ScrollTrigger -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* Custom Apple Glassmorphism and Typographic Enhancements */
+    body {
+      background-color: #000000;
+      color: #F5F5F7;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .apple-glass {
+      background: rgba(18, 18, 18, 0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .apple-glass-nav {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .text-gradient-emerald {
+      background: linear-gradient(135deg, #FFFFFF 0%, #00E599 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-gradient-titanium {
+      background: linear-gradient(135deg, #FFFFFF 30%, #86868b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-gradient-blue {
+      background: linear-gradient(135deg, #FFFFFF 0%, #2997FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .pill-btn {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .pill-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 229, 153, 0.4);
+    }
+
+    /* Custom range slider styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.1);
+      border-radius: 9999px;
+      height: 6px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #00E599;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 229, 153, 0.8);
+      transition: transform 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Hide scrollbar for clean UI */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
 </head>
 
-<body>
-<a class="skip-link" href="#manifiesto">Saltar al contenido</a>
+<body class="selection:bg-brand-emerald selection:text-black">
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     HERO — video a pantalla completa, SIN overlay ni degradado encima
-     ═══════════════════════════════════════════════════════════════ -->
-<header class="hero" id="inicio">
-
-  <video class="hero__video"
-         autoplay loop muted playsinline
-         preload="auto"
-         aria-hidden="true" tabindex="-1">
-    <!-- Para servir el video desde SiteGround: descárgalo y usa
-         <source src="assets/video/hero.mp4" type="video/mp4"> como PRIMER source -->
-    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
-  </video>
-
-  <div class="hero__layer">
-
-    <!-- ── Navbar ─────────────────────────────────────────────────── -->
-    <div class="page-px nav-wrap">
-      <nav class="nav liquid-glass" aria-label="Navegación principal">
-        <a class="nav__logo" href="#inicio" aria-label="PROCIV Urban Group, inicio">
-          <img class="brand-mark" src="assets/img/prociv-icono-blanco.png" alt="" width="40" height="44">
-          <span>PROCIV<span class="nav__logo-sub">Urban&nbsp;Group</span></span>
+  <!-- ═══════════════════════════════════════════════════════════════════
+       1. HEADER MINIMALISTA (FLOATING APPLE TRANSLUCENT NAVBAR)
+       ═══════════════════════════════════════════════════════════════ -->
+  <header class="fixed top-0 left-0 right-0 z-50 apple-glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo -->
+        <a href="#inicio" class="flex items-center gap-3 group" aria-label="PROCIV Urban Group Inicio">
+          <img src="assets/img/prociv-icono-blanco.png" alt="PROCIV Icon" class="w-9 h-10 object-contain transition-transform duration-300 group-hover:scale-105">
+          <div class="flex flex-col">
+            <span class="text-lg font-bold tracking-tight text-white font-display leading-none">PROCIV</span>
+            <span class="text-[10px] font-medium tracking-widest text-brand-emerald uppercase leading-tight">Urban Group</span>
+          </div>
         </a>
 
-        <ul class="nav__links" id="navLinks">
-          <li><a href="#proyectos">Proyectos</a></li>
-          <li><a href="#manifiesto">Manifiesto</a></li>
-          <li><a href="#lifestyle">Lifestyle</a></li>
-          <li><a href="#inversion">Inversión</a></li>
-        </ul>
+        <!-- Navigation Links (Desktop) -->
+        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+          <a href="#vision" class="hover:text-white transition-colors">Visión</a>
+          <a href="#transformacion" class="hover:text-brand-emerald transition-colors">Scrollytelling</a>
+          <a href="#bento" class="hover:text-white transition-colors">Amenidades</a>
+          <a href="#simulador" class="hover:text-brand-emerald transition-colors">Simulador ROI</a>
+          <a href="#proyectos" class="hover:text-white transition-colors">Proyectos</a>
+          <a href="#contacto" class="hover:text-white transition-colors">Contacto VIP</a>
+        </nav>
 
-        <div class="nav__right">
-          <a class="btn btn--solid btn--sm" href="#contacto">hablemos</a>
-          <button class="nav__toggle" type="button"
-                  aria-controls="navLinks" aria-expanded="false" aria-label="Abrir menú">
-            <span></span><span></span><span></span>
-          </button>
-        </div>
-      </nav>
-    </div>
-
-    <!-- ── Contenido del hero (pegado abajo) ──────────────────────── -->
-    <div class="page-px hero__content">
-      <div class="hero__grid">
-
-        <div class="hero__main">
-          <h1 class="hero__title"
-              data-animated-heading="Rediseñamos el pulso de la ciudad.
-Habitamos el futuro."></h1>
-
-          <p class="hero__sub" data-fade-in="800">
-            Más que metros cuadrados, creamos espacios vivos. Proyectos diseñados para una
-            generación que exige arquitectura de vanguardia, conectividad total y amenidades
-            que transforman tu rutina en una experiencia.
-          </p>
-
-          <div class="hero__actions" data-fade-in="1200">
-            <a class="btn btn--solid" href="#proyectos">Explorar Proyectos</a>
-            <a class="btn btn--glass liquid-glass" href="#inversion">Ver Oportunidades de Inversión</a>
-          </div>
-
-          <p class="hero__proof" data-fade-in="1600">
-            +3.500 m² en desarrollo <span>·</span> 100% ubicaciones estratégicas <span>·</span> Alta plusvalía proyectada
-          </p>
+        <!-- CTA Action Buttons -->
+        <div class="hidden sm:flex items-center gap-4">
+          <a href="#simulador" class="text-xs font-semibold px-4 py-2 rounded-full border border-white/10 text-white hover:bg-white/5 transition-all">
+            Calcular ROI
+          </a>
+          <a href="#contacto" class="pill-btn text-xs font-bold px-5 py-2.5 rounded-full bg-brand-emerald text-black hover:bg-white transition-all flex items-center gap-2">
+            <span>Explorar Proyecto</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </a>
         </div>
 
-        <div class="hero__tagcol">
-          <div class="hero__tag liquid-glass" data-fade-in="1400">
-            LA EVOLUCIÓN DEL HÁBITAT URBANO
-          </div>
-        </div>
+        <!-- Mobile Menu Trigger -->
+        <button id="mobileMenuBtn" class="md:hidden text-white p-2 focus:outline-none" aria-label="Abrir menú">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
 
       </div>
     </div>
 
-  </div>
-</header>
-
-
-<main>
-
-  <!-- ═══════════════════ 01 · MANIFIESTO ═══════════════════ -->
-  <section class="section section--bone" id="manifiesto">
-    <div class="page-px">
-      <p class="eyebrow reveal">01 — Manifiesto</p>
-      <h2 class="h2 reveal">El espacio donde tus ambiciones<br>se encuentran con la ciudad.</h2>
-
-      <div class="cols-2">
-        <blockquote class="quote reveal">
-          La ciudad no es solo un lugar donde vives; es el escenario donde sucede tu vida.
-          En PROCIV Urban Group entendemos que la nueva generación no busca cuatro paredes:
-          busca tiempo, diseño, comunidad e inspiración diaria.
-        </blockquote>
-        <div class="prose reveal">
-          <p>
-            Fusionamos la solidez de la ingeniería con la audacia del diseño urbano. Cada
-            desarrollo está pensado para integrarse de forma natural a la dinámica de la
-            metrópoli, transformando los barrios con mayor proyección y garantizando que tu
-            inversión crezca al mismo ritmo que tus aspiraciones.
-          </p>
-          <p class="claim">No vendemos metros cuadrados. Creamos valor en la ciudad.</p>
-        </div>
-      </div>
-
-      <div class="adn">
-        <article class="adn__item reveal">
-          <span class="adn__num">01</span>
-          <h3>Progreso</h3>
-          <p>Creemos en una ciudad que evoluciona. En arquitectura que mira hacia adelante y en espacios que generan nuevas oportunidades.</p>
-        </article>
-        <article class="adn__item reveal">
-          <span class="adn__num">02</span>
-          <h3>Ciudad</h3>
-          <p>La ciudad es nuestro escenario. Estudiamos dónde construir, cómo se conecta, qué tiene alrededor y quién quiere vivir allí.</p>
-        </article>
-        <article class="adn__item reveal">
-          <span class="adn__num">03</span>
-          <h3>Valor</h3>
-          <p>Cada proyecto debe generar valor. Para quien compra, para quien vive, para quien invierte, para el entorno y para la ciudad.</p>
-        </article>
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobileMenu" class="hidden md:hidden apple-glass border-b border-white/10 px-6 py-6 space-y-4">
+      <a href="#vision" class="block text-base font-medium text-gray-200 hover:text-brand-emerald">Visión</a>
+      <a href="#transformacion" class="block text-base font-medium text-gray-200 hover:text-brand-emerald">Transformación</a>
+      <a href="#bento" class="block text-base font-medium text-gray-200 hover:text-brand-emerald">Bento Amenidades</a>
+      <a href="#simulador" class="block text-base font-medium text-gray-200 hover:text-brand-emerald">Simulador ROI</a>
+      <a href="#proyectos" class="block text-base font-medium text-gray-200 hover:text-brand-emerald">Proyectos</a>
+      <a href="#contacto" class="block text-base font-medium text-gray-200 hover:text-brand-emerald">Contacto VIP</a>
+      <div class="pt-4 border-t border-white/10 flex flex-col gap-3">
+        <a href="#contacto" class="w-full text-center pill-btn text-sm font-bold py-3 rounded-full bg-brand-emerald text-black">
+          Explorar Proyecto
+        </a>
       </div>
     </div>
-  </section>
+  </header>
 
 
-  <!-- ═══════════════════ 02 · LA FÓRMULA ═══════════════════ -->
-  <section class="section section--dark" id="formula">
-    <div class="page-px">
-      <p class="eyebrow reveal">02 — La fórmula PROCIV</p>
-      <h2 class="h2 reveal">Cuatro pilares.<br>Una sola forma de vivir mejor.</h2>
-
-      <div class="pillars">
-        <article class="pillar reveal">
-          <h3>Diseño con propósito</h3>
-          <p>Arquitectura contemporánea, iluminación natural y optimización espacial sin desperdicio de metros.</p>
-        </article>
-        <article class="pillar reveal">
-          <h3>Ubicación hiperconectada</h3>
-          <p>A minutos de lo que te mueve: distritos gastronómicos, centros de negocios, ciclovías y transporte.</p>
-        </article>
-        <article class="pillar reveal">
-          <h3>Amenidades extensivas</h3>
-          <p>Tu espacio no termina en tu puerta. Rooftops con vistas infinitas, coworkings de nivel pro, gimnasios de autor y áreas wellness.</p>
-        </article>
-        <article class="pillar reveal">
-          <h3>Plusvalía inteligente</h3>
-          <p>Desarrollos ubicados en zonas de alta valorización que protegen tu patrimonio y maximizan tus retornos.</p>
-        </article>
-      </div>
+  <!-- ═══════════════════════════════════════════════════════════════════
+       2. HERO MONUMENTAL & DUAL CTA (ESTILO APPLE KEYNOTE)
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden">
+    
+    <!-- Background Video / Dynamic Backdrop -->
+    <div class="absolute inset-0 z-0">
+      <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-40 scale-105 transform transition-transform duration-1000">
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/80"></div>
     </div>
-  </section>
 
-
-  <!-- ═══════════════════ 03 · PROYECTOS ═══════════════════ -->
-  <section class="section section--bone" id="proyectos">
-    <div class="page-px">
-      <p class="eyebrow reveal">03 — Proyectos</p>
-      <h2 class="h2 reveal">Proyectos que tienen<br>algo que decir.</h2>
-
-      <div class="projects">
-
-        <article class="project project--featured reveal">
-          <div class="project__media" data-label="CityLive101"></div>
-          <div class="project__body">
-            <span class="badge">En desarrollo</span>
-            <h3>CityLive101</h3>
-            <p class="project__claim">Vive la ciudad. A tu manera. Aquí y ahora.</p>
-            <dl class="project__meta">
-              <div><dt>Ubicación</dt><dd>Calle 101 #70G-55 · Santa Rosa Morato, Bogotá</dd></div>
-              <div><dt>Tipologías</dt><dd>Apartaestudios Unique y Duo · balcones y mezzanines</dd></div>
-              <div><dt>Concepto</dt><dd>Coworking, terraza BBQ, zonas verdes y bicicleteros a minutos de la Calle 100.</dd></div>
-            </dl>
-            <a class="link-arrow" href="citylive101.html">Conocer proyecto</a>
-          </div>
-        </article>
-
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+      
+      <!-- Top Badge Pill -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full apple-glass text-xs font-semibold text-brand-emerald tracking-wide uppercase mb-8 shadow-glow-emerald border border-brand-emerald/30">
+        <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
+        <span>Redefiniendo el Hábitat Urbano en Colombia</span>
       </div>
-    </div>
-  </section>
 
+      <!-- Main Headline Monumental -->
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight font-display text-white max-w-5xl leading-[1.08] mb-6">
+        El futuro se construye <br class="hidden sm:inline">
+        <span class="text-gradient-emerald">desde el origen.</span>
+      </h1>
 
-  <!-- ═══════════════════ 04 · LIFESTYLE ═══════════════════ -->
-  <section class="section section--sand" id="lifestyle">
-    <div class="page-px">
-      <p class="eyebrow reveal">04 — Lifestyle &amp; amenidades</p>
-      <h2 class="h2 reveal">Tu vida ya no cabe en<br>un apartamento tradicional.</h2>
-      <p class="lead reveal">
-        El nuevo lujo es la libertad: salir de tu jornada remota en el Creative Lounge,
-        entrenar en el Sky Gym al atardecer y cerrar el día con amigos en el Rooftop Firepit
-        sin salir de tu edificio.
+      <!-- Evocative Subtitle -->
+      <p class="text-lg sm:text-xl md:text-2xl text-gray-300 font-light max-w-3xl leading-relaxed mb-10">
+        Transformamos suelo estratégico en iconos arquitectónicos de altura. Renovación urbana de vanguardia que revaloriza ciudades y maximiza tu patrimonio.
       </p>
 
-      <div class="amenities">
-        <article class="amenity reveal">
-          <h3>Work &amp; Create</h3>
-          <p>Zonas de coworking hiperconectadas con salas de podcast y cabinas privadas.</p>
-        </article>
-        <article class="amenity reveal">
-          <h3>Wellness &amp; Body</h3>
-          <p>Espacios de yoga, calistenia y gimnasios equipados con estándar internacional.</p>
-        </article>
-        <article class="amenity reveal">
-          <h3>Social &amp; Community</h3>
-          <p>Terrazas panorámicas, cocinas abiertas para eventos y zonas lounge.</p>
-        </article>
+      <!-- Dual Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-16">
+        <a href="#transformacion" class="w-full sm:w-auto pill-btn text-base font-bold px-8 py-4 rounded-full bg-brand-emerald text-black hover:bg-white shadow-glow-emerald transition-all flex items-center justify-center gap-3">
+          <span>Iniciar Scrollytelling</span>
+          <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+        </a>
+        <a href="#simulador" class="w-full sm:w-auto text-base font-semibold px-8 py-4 rounded-full apple-glass text-white hover:border-brand-emerald/50 transition-all flex items-center justify-center gap-3">
+          <i data-lucide="calculator" class="w-4 h-4 text-brand-emerald"></i>
+          <span>Simulador de ROI</span>
+        </a>
       </div>
 
-      <p class="insight reveal">“No necesito más espacio.<br><em>Necesito mejor espacio.”</em></p>
+      <!-- Floating Stat Metric Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
+        <div class="apple-glass p-5 rounded-2xl text-center border border-white/10 hover:border-brand-emerald/30 transition-all">
+          <p class="text-2xl sm:text-3xl font-extrabold text-brand-emerald font-display">+38%</p>
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">Plusvalía Proyectada</p>
+        </div>
+        <div class="apple-glass p-5 rounded-2xl text-center border border-white/10 hover:border-brand-emerald/30 transition-all">
+          <p class="text-2xl sm:text-3xl font-extrabold text-white font-display">+3.500 m²</p>
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">En Desarrollo Activo</p>
+        </div>
+        <div class="apple-glass p-5 rounded-2xl text-center border border-white/10 hover:border-brand-emerald/30 transition-all">
+          <p class="text-2xl sm:text-3xl font-extrabold text-brand-blue font-display">14.5% E.A.</p>
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">Retorno Estimado</p>
+        </div>
+        <div class="apple-glass p-5 rounded-2xl text-center border border-white/10 hover:border-brand-emerald/30 transition-all">
+          <p class="text-2xl sm:text-3xl font-extrabold text-white font-display">100%</p>
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">Ubicación AAA</p>
+        </div>
+      </div>
+
     </div>
   </section>
 
 
-  <!-- ═══════════════════ 05 · INVERSIÓN ═══════════════════ -->
-  <section class="section section--dark" id="inversion">
-    <div class="page-px">
-      <p class="eyebrow reveal">05 — Inversión &amp; Smart Equity</p>
-      <h2 class="h2 reveal">Progreso tangible<br>para tu patrimonio.</h2>
-      <p class="lead reveal">
-        Invertir en PROCIV Urban Group no es solo adquirir una propiedad: es entrar al mercado
-        con una ventaja competitiva.
-      </p>
-
-      <div class="pillars pillars--3">
-        <article class="pillar reveal">
-          <h3>Renta tradicional y flexible</h3>
-          <p>Diseñados para captar alta demanda de arrendatarios jóvenes, nómadas digitales y ejecutivos.</p>
-        </article>
-        <article class="pillar reveal">
-          <h3>Ingeniería sostenible</h3>
-          <p>Materiales de bajo mantenimiento y eficiencia energética que reducen costos operativos a largo plazo.</p>
-        </article>
-        <article class="pillar reveal">
-          <h3>Seguridad financiera</h3>
-          <p>Transparencia total en tiempos de entrega, esquemas de pago flexibles y asesoría patrimonial personalizada.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ═══════════════════ 06 · CONTACTO ═══════════════════ -->
-  <section class="section section--bone" id="contacto">
-    <div class="page-px cols-2 cols-2--form">
-      <div class="reveal">
-        <p class="eyebrow">06 — Dossier</p>
-        <h2 class="h2">El momento de dar<br>el salto urbano es hoy.</h2>
-        <p class="lead">
-          ¿Buscas tu próximo hogar o tu mejor inversión inmobiliaria? Déjanos tus datos y un
-          consultor patrimonial te enviará el portafolio exclusivo de preventas con precios de
-          lista cero.
+  <!-- ═══════════════════════════════════════════════════════════════════
+       3. SCROLLYTELLING INTERACTIVO (VIDEO / CANVAS SCRUBBING APPLE STYLE)
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="transformacion" class="relative bg-black py-24 sm:py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <span class="text-xs font-bold tracking-widest text-brand-emerald uppercase">Scrollytelling de Transformación</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-3">
+          De la oportunidad al <span class="text-gradient-emerald">icono urbano</span>.
+        </h2>
+        <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mt-4 font-light">
+          Desliza para presenciar el ciclo de vida completo de nuestros desarrollos inmobiliarios.
         </p>
       </div>
 
-      <form class="form reveal" id="leadForm" novalidate>
-        <label>
-          <span>Nombre completo</span>
-          <input type="text" name="nombre" required autocomplete="name" placeholder="Tu nombre completo">
-        </label>
-        <label>
-          <span>Correo electrónico</span>
-          <input type="email" name="email" required autocomplete="email" placeholder="tucorreo@dominio.com">
-        </label>
-        <label>
-          <span>Número de WhatsApp</span>
-          <input type="tel" name="telefono" required autocomplete="tel" placeholder="+57 300 000 0000">
-        </label>
-        <label>
-          <span>Me interesa</span>
-          <select name="interes" required>
-            <option value="">Selecciona una opción</option>
-            <option value="Vivir">Vivir</option>
-            <option value="Invertir">Invertir</option>
-          </select>
-        </label>
-        <button class="btn btn--dark" type="submit">Recibir dossier y lista de precios</button>
-        <p class="form__legal">Cero spam. Información financiera clara y directa a tu bandeja.</p>
-        <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
-      </form>
+      <!-- Scrollytelling Timeline Cards & Interactive Preview Container -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Interactive Stage Cards (Left Column) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Stage 1 -->
+          <div id="stage1-card" class="stage-card p-6 rounded-2xl apple-glass border-l-4 border-l-brand-emerald transition-all duration-300 cursor-pointer hover:bg-white/5">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-brand-emerald uppercase tracking-wider">Fase 01 — 0% Scroll</span>
+              <span class="text-xs text-gray-500 font-mono">Detección de Suelo</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">La Oportunidad Oculta en la Tierra</h3>
+            <p class="text-sm text-gray-400 leading-relaxed font-light">
+              Identificamos lotes estratégicos en zonas de renovación de alta demanda en Bogotá. Analizamos conectividad, plusvalía y potencial de densificación.
+            </p>
+          </div>
+
+          <!-- Stage 2 -->
+          <div id="stage2-card" class="stage-card p-6 rounded-2xl apple-glass border-l-4 border-l-transparent transition-all duration-300 cursor-pointer hover:bg-white/5 opacity-70">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-brand-blue uppercase tracking-wider">Fase 02 — 50% Scroll</span>
+              <span class="text-xs text-gray-500 font-mono">Ingeniería &amp; Altura</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Ingeniería, Altura y Evolución</h3>
+            <p class="text-sm text-gray-400 leading-relaxed font-light">
+              Despliegue de tecnología constructiva avanzada, estructuras sismorresistentes de última generación y optimización bioclimática del edificio.
+            </p>
+          </div>
+
+          <!-- Stage 3 -->
+          <div id="stage3-card" class="stage-card p-6 rounded-2xl apple-glass border-l-4 border-l-transparent transition-all duration-300 cursor-pointer hover:bg-white/5 opacity-70">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Fase 03 — 100% Scroll</span>
+              <span class="text-xs text-gray-500 font-mono">Entrega &amp; Valor</span>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Un Nuevo Ícono Inmobiliario</h3>
+            <p class="text-sm text-gray-400 leading-relaxed font-light">
+              Edificio finalizado integrado a la vida metropolitana. Máxima plusvalía para los inversionistas visionarios que ingresaron en fase cero.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Scrollytelling Visual Canvas Container (Right Column) -->
+        <div class="lg:col-span-7 relative h-[480px] sm:h-[550px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-brand-dark">
+          
+          <video id="scrollyVideo" muted playsinline preload="auto" class="w-full h-full object-cover">
+            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+          </video>
+
+          <!-- Overlay Gradient & Dynamic Caption -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/30 pointer-events-none"></div>
+
+          <div class="absolute bottom-8 left-8 right-8 p-6 apple-glass rounded-2xl border border-white/10">
+            <div class="flex items-center gap-3 mb-2">
+              <span id="scrollyStageBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30">
+                FASE 1: LOTE Y DIAGNÓSTICO
+              </span>
+              <span class="text-xs text-gray-400 font-mono">Simulación 4K Render</span>
+            </div>
+            <p id="scrollyStageDesc" class="text-sm sm:text-base font-medium text-white">
+              Análisis geoespacial y adquisición estratégica de suelo de alto potencial de renovación urbana.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
   </section>
 
 
-  <!-- ═══════════════════ CIERRE ═══════════════════ -->
-  <section class="closing">
-    <div class="page-px">
-      <p class="closing__kicker reveal">PROCIV</p>
-      <h2 class="closing__line reveal">Hacemos ciudad para quienes<br>están construyendo el futuro.</h2>
-      <p class="closing__tag reveal">Progreso. Ciudad. Valor.</p>
+  <!-- ═══════════════════════════════════════════════════════════════════
+       4. MANIFIESTO EDITORIAL & ADN PROCIV
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="vision" class="bg-brand-dark py-24 sm:py-32 border-y border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-3xl mb-16">
+        <span class="text-xs font-bold tracking-widest text-brand-emerald uppercase">01 — Manifiesto Corporativo</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-3 leading-tight">
+          El espacio donde tus ambiciones se encuentran con la ciudad.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start mb-20">
+        <blockquote class="text-xl sm:text-2xl font-light text-gray-200 italic leading-relaxed border-l-2 border-brand-emerald pl-6">
+          “La ciudad no es solo un lugar donde vives; es el escenario donde sucede tu vida. En PROCIV Urban Group entendemos que la nueva generación no busca cuatro paredes: busca tiempo, diseño, comunidad e inspiración diaria.”
+        </blockquote>
+        <div class="space-y-6 text-gray-400 font-light text-base leading-relaxed">
+          <p>
+            Fusionamos la solidez de la ingeniería con la audacia del diseño urbano. Cada desarrollo está pensado para integrarse de forma natural a la dinámica de la metrópoli, transformando los barrios con mayor proyección y garantizando que tu inversión crezca al mismo ritmo que tus aspiraciones.
+          </p>
+          <p class="text-white font-semibold text-lg">
+            No vendemos metros cuadrados. Creamos valor en la ciudad.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3 ADN Pillars -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div class="apple-glass p-8 rounded-3xl border border-white/10 hover:border-brand-emerald/40 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-2xl bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-bold text-xl mb-6 group-hover:scale-110 transition-transform">
+            01
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">Progreso</h3>
+          <p class="text-sm text-gray-400 font-light leading-relaxed">
+            Arquitectura que mira hacia adelante. Diseñamos estructuras vanguardistas que impulsan la renovación urbana y generan nuevas oportunidades.
+          </p>
+        </div>
+
+        <div class="apple-glass p-8 rounded-3xl border border-white/10 hover:border-brand-blue/40 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-2xl bg-brand-blue/10 text-brand-blue flex items-center justify-center font-bold text-xl mb-6 group-hover:scale-110 transition-transform">
+            02
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">Ciudad</h3>
+          <p class="text-sm text-gray-400 font-light leading-relaxed">
+            La metrópoli es nuestro escenario. Ubicaciones hiperconectadas a minutos de centros de negocios, movilidad sustentable y gastronomía.
+          </p>
+        </div>
+
+        <div class="apple-glass p-8 rounded-3xl border border-white/10 hover:border-purple-400/40 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-xl mb-6 group-hover:scale-110 transition-transform">
+            03
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-3">Valor</h3>
+          <p class="text-sm text-gray-400 font-light leading-relaxed">
+            Retornos sólidos y plusvalía sostenible. Cada metro cuadrado genera rentabilidad superior para el inversionista y el comprador final.
+          </p>
+        </div>
+
+      </div>
+
     </div>
   </section>
 
-</main>
 
+  <!-- ═══════════════════════════════════════════════════════════════════
+       5. BENTO GRID DE ARQUITECTURA & AMENIDADES (ESTILO APPLE)
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="bento" class="bg-black py-24 sm:py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs font-bold tracking-widest text-brand-emerald uppercase">Bento Grid de Innovación</span>
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-3">
+          Diseñado para una nueva <span class="text-gradient-emerald">forma de vivir</span>.
+        </h2>
+        <p class="text-gray-400 text-base sm:text-lg font-light mt-4">
+          Un ecosistema completo donde el trabajo, la salud y el entretenimiento convergen sin salir de tu edificio.
+        </p>
+      </div>
 
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
-<footer class="footer">
-  <div class="page-px footer__grid">
-    <div>
-      <p class="footer__brand">
-        <img class="brand-mark" src="assets/img/prociv-icono-blanco.png" alt="" width="48" height="53">
-        <span class="footer__brand-name">PROCIV<span class="footer__brand-sub">Urban Group</span></span>
-      </p>
-      <p class="footer__desc">Forjando el nuevo estándar de la vida urbana.</p>
+      <!-- Bento Grid 5-Card Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        
+        <!-- Bento 1: Large Featured Card (2x2) -->
+        <div class="md:col-span-2 lg:col-span-2 md:row-span-2 apple-glass p-8 sm:p-10 rounded-3xl border border-white/10 flex flex-col justify-between relative overflow-hidden group hover:border-brand-emerald/50 transition-all">
+          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-emerald/10 rounded-full blur-3xl group-hover:bg-brand-emerald/20 transition-all"></div>
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-emerald/10 text-brand-emerald text-xs font-bold mb-6">
+              <i data-lucide="wifi" class="w-3.5 h-3.5"></i>
+              <span>Work &amp; Create</span>
+            </div>
+            <h3 class="text-3xl font-extrabold text-white mb-4">Creative Lounge &amp; Podcast Studio</h3>
+            <p class="text-gray-400 text-sm sm:text-base font-light leading-relaxed mb-6">
+              Coworking pro hiperconectado con internet redundante de fibra óptica, cabinas insonorizadas para llamadas ejecutivas y estudio equipado para creación de contenido.
+            </p>
+          </div>
+          <div class="space-y-3 pt-6 border-t border-white/10">
+            <div class="flex items-center justify-between text-xs text-gray-300">
+              <span>Conexión Fibra Óptica</span>
+              <span class="font-mono text-brand-emerald">1 Gbps Simétrico</span>
+            </div>
+            <div class="flex items-center justify-between text-xs text-gray-300">
+              <span>Cabinas Privadas QuietZone</span>
+              <span class="font-mono text-brand-emerald">100% Insonorizadas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento 2: Sky Gym (1x1) -->
+        <div class="apple-glass p-8 rounded-3xl border border-white/10 hover:border-brand-blue/50 transition-all flex flex-col justify-between group">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-brand-blue/10 text-brand-blue flex items-center justify-center mb-6">
+              <i data-lucide="dumbell" class="w-5 h-5"></i>
+            </div>
+            <h4 class="text-xl font-bold text-white mb-2">Sky Gym &amp; Wellness</h4>
+            <p class="text-xs text-gray-400 font-light leading-relaxed">
+              Equipamiento de alto rendimiento, zona de calistenia y vista panorámica sobre la ciudad.
+            </p>
+          </div>
+          <span class="text-[11px] text-brand-blue font-semibold uppercase tracking-wider mt-4">Nivel Rooftop</span>
+        </div>
+
+        <!-- Bento 3: Rooftop BBQ (1x1) -->
+        <div class="apple-glass p-8 rounded-3xl border border-white/10 hover:border-purple-400/50 transition-all flex flex-col justify-between group">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-6">
+              <i data-lucide="flame" class="w-5 h-5"></i>
+            </div>
+            <h4 class="text-xl font-bold text-white mb-2">Firepit &amp; Social Lounge</h4>
+            <p class="text-xs text-gray-400 font-light leading-relaxed">
+              Terrazas panorámicas con zonas BBQ de autor y chimeneas para eventos privados.
+            </p>
+          </div>
+          <span class="text-[11px] text-purple-400 font-semibold uppercase tracking-wider mt-4">Vista 360°</span>
+        </div>
+
+        <!-- Bento 4: Domótica & Eficiencia (2x1 Wide) -->
+        <div class="md:col-span-2 lg:col-span-2 apple-glass p-8 rounded-3xl border border-white/10 hover:border-brand-emerald/50 transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+          <div class="space-y-2">
+            <span class="text-xs font-bold text-brand-emerald uppercase">Tecnología Inteligente</span>
+            <h4 class="text-2xl font-bold text-white">Domótica Integral &amp; Accesos Smart</h4>
+            <p class="text-xs text-gray-400 font-light max-w-md">
+              Cerraduras biométricas, control de iluminación por app y optimización energética automatizada en todas las tipologías.
+            </p>
+          </div>
+          <div class="shrink-0 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 text-center">
+            <span class="block text-xl font-bold text-brand-emerald font-display">-30%</span>
+            <span class="text-[10px] text-gray-400 uppercase">Consumo Energético</span>
+          </div>
+        </div>
+
+      </div>
+
     </div>
-    <nav aria-label="Explora">
-      <h3>Explora</h3>
-      <ul>
-        <li><a href="#proyectos">Proyectos en desarrollo</a></li>
-        <li><a href="#proyectos">Preventas</a></li>
-        <li><a href="#proyectos">Entrega inmediata</a></li>
-        <li><a href="#inversion">Modelo inversionista</a></li>
-      </ul>
-    </nav>
-    <nav aria-label="Compañía">
-      <h3>Compañía</h3>
-      <ul>
-        <li><a href="#manifiesto">Manifiesto</a></li>
-        <li><a href="#formula">Sostenibilidad</a></li>
-        <li><a href="#contacto">Prensa</a></li>
-        <li><a href="#contacto">Carreras</a></li>
-      </ul>
-    </nav>
-    <div>
-      <h3>Contacto</h3>
-      <ul>
-        <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Calle+101+%2370G-53%2C+Bogot%C3%A1" target="_blank" rel="noopener">Calle 101 #70G-53, Bogotá</a></li>
-        <li><a href="https://wa.me/573246508105" target="_blank" rel="noopener">WhatsApp: +57 324 650 8105</a></li>
-        <li><a href="tel:+573246508105">Teléfono: +57 324 650 8105</a></li>
-        <li><a href="mailto:contacto@prociv.co">contacto@prociv.co</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="page-px footer__legal">
-    <p>© <span id="year">2026</span> PROCIV Urban Group. Todos los derechos reservados.</p>
-    <p><a href="#">Políticas de privacidad</a> · <a href="#">Términos de uso</a></p>
-  </div>
-</footer>
+  </section>
 
-<script src="assets/js/main.js" defer></script>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       6. SIMULADOR INTERACTIVO DE VALORIZACIÓN / ROI
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="simulador" class="bg-brand-dark py-24 sm:py-32 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Simulator Left Text -->
+        <div class="lg:col-span-5 space-y-6">
+          <span class="text-xs font-bold tracking-widest text-brand-emerald uppercase">Simulador Financiero VIP</span>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display leading-tight">
+            Proyecta el crecimiento de <span class="text-gradient-emerald">tu patrimonio</span>.
+          </h2>
+          <p class="text-gray-400 text-base font-light leading-relaxed">
+            Utiliza nuestro simulador interactivo para calcular la plusvalía estimada por etapa de construcción y los ingresos proyectados por renta flexible o tradicional.
+          </p>
+          
+          <div class="space-y-4 pt-4">
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <i data-lucide="check-circle" class="w-5 h-5 text-brand-emerald"></i>
+              <span>Modelos optimizados para Airbnb / Nómadas Digitales</span>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <i data-lucide="check-circle" class="w-5 h-5 text-brand-emerald"></i>
+              <span>Plusvalía acumulada desde lista cero de preventa</span>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <i data-lucide="check-circle" class="w-5 h-5 text-brand-emerald"></i>
+              <span>Asesoría patrimonial y de estructuración crediticia</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulator Interactive Card Right -->
+        <div class="lg:col-span-7 apple-glass p-8 sm:p-10 rounded-3xl border border-white/10 shadow-glow-emerald">
+          
+          <div class="flex items-center justify-between pb-6 mb-6 border-b border-white/10">
+            <span class="text-sm font-bold text-white uppercase tracking-wider">Calculadora ROI PROCIV</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/30">
+              Tasa Proyectada: 14.5% E.A.
+            </span>
+          </div>
+
+          <div class="space-y-8">
+            
+            <!-- Slider 1: Inversión Inicial -->
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label class="text-sm font-medium text-gray-300">Monto de Inversión Inicial (COP)</label>
+                <span id="investmentVal" class="text-xl font-bold text-brand-emerald font-mono">$220.000.000</span>
+              </div>
+              <input id="investmentSlider" type="range" min="150000000" max="600000000" step="10000000" value="220000000" class="w-full">
+              <div class="flex justify-between text-[11px] text-gray-500 mt-2 font-mono">
+                <span>$150M</span>
+                <span>$350M</span>
+                <span>$600M</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Años de Proyección -->
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label class="text-sm font-medium text-gray-300">Horizonte de Tiempo (Años)</label>
+                <span id="yearsVal" class="text-xl font-bold text-white font-mono">5 Años</span>
+              </div>
+              <input id="yearsSlider" type="range" min="1" max="10" step="1" value="5" class="w-full">
+              <div class="flex justify-between text-[11px] text-gray-500 mt-2 font-mono">
+                <span>1 Año</span>
+                <span>5 Años</span>
+                <span>10 Años</span>
+              </div>
+            </div>
+
+            <!-- Dropdown: Modelo de Explotación -->
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Modelo de Explotación Sugerido</label>
+              <select id="modelSelect" class="w-full apple-glass border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-emerald">
+                <option value="1.25">Renta Corta / Airbnb &amp; Nómadas (Rendimiento Alto)</option>
+                <option value="1.0">Renta Tradicional Larga Estancia (Rendimiento Estable)</option>
+              </select>
+            </div>
+
+            <!-- Dynamic Outputs -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/10">
+              <div class="p-4 rounded-2xl bg-white/5 text-center">
+                <span class="text-[11px] text-gray-400 uppercase font-medium">Plusvalía Proyectada</span>
+                <p id="appreciationOutput" class="text-xl font-bold text-brand-emerald font-mono mt-1">$92.400.000</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-white/5 text-center">
+                <span class="text-[11px] text-gray-400 uppercase font-medium">Ingreso Mensual Renta</span>
+                <p id="monthlyIncomeOutput" class="text-xl font-bold text-white font-mono mt-1">$2.650.000</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-white/5 text-center">
+                <span class="text-[11px] text-gray-400 uppercase font-medium">Retorno Total Est.</span>
+                <p id="totalReturnOutput" class="text-xl font-bold text-brand-blue font-mono mt-1">+114.2%</p>
+              </div>
+            </div>
+
+            <!-- Action CTA inside Simulator -->
+            <a href="#contacto" class="w-full pill-btn py-4 rounded-full bg-brand-emerald text-black text-center font-bold text-sm block">
+              Solicitar Estudio Financiero Personalizado
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       7. PROYECTO DESTACADO (CITYLIVE101)
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="proyectos" class="bg-black py-24 sm:py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-6">
+        <div>
+          <span class="text-xs font-bold tracking-widest text-brand-emerald uppercase">Portafolio Activo</span>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-3">
+            Desarrollos en <span class="text-gradient-emerald">Preventa Cero</span>.
+          </h2>
+        </div>
+        <a href="citylive101.html" class="text-sm font-semibold text-brand-emerald hover:underline flex items-center gap-2">
+          <span>Ver Ficha Técnica Completa</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+
+      <!-- Featured Card: CityLive101 -->
+      <div class="apple-glass rounded-3xl border border-white/10 overflow-hidden grid grid-cols-1 lg:grid-cols-12 hover:border-brand-emerald/40 transition-all group">
+        
+        <div class="lg:col-span-7 relative min-h-[350px] overflow-hidden">
+          <img src="assets/img/prociv-logo-navy.png" alt="CityLive101 Render" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+          <div class="absolute top-6 left-6 flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-brand-emerald text-black text-xs font-extrabold uppercase">
+              En Desarrollo Activo
+            </span>
+            <span class="px-3 py-1 rounded-full apple-glass text-white text-xs font-medium">
+              Bogotá — Calle 101 #70G-55
+            </span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 p-8 sm:p-10 flex flex-col justify-between space-y-6">
+          <div>
+            <h3 class="text-3xl font-extrabold text-white font-display mb-3">CityLive101</h3>
+            <p class="text-gray-300 text-sm font-light leading-relaxed">
+              Vive la ciudad a tu manera. Apartaestudios Unique y Duo con balcones, mezzanines, coworking integral y rooftop BBQ a pasos de la Calle 100 y la Av. Suba.
+            </p>
+            
+            <dl class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/10 text-xs">
+              <div>
+                <dt class="text-gray-500 uppercase font-medium">Tipologías</dt>
+                <dd class="text-white font-semibold mt-1">Unique &amp; Duo Suites</dd>
+              </div>
+              <div>
+                <dt class="text-gray-500 uppercase font-medium">Entrega</dt>
+                <dd class="text-brand-emerald font-semibold mt-1">2027 — Preventa</dd>
+              </div>
+            </dl>
+          </div>
+
+          <a href="citylive101.html" class="w-full pill-btn py-3.5 rounded-full bg-white/10 text-white hover:bg-brand-emerald hover:text-black font-bold text-center text-sm transition-all block">
+            Ver Galería y Planos
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       8. FORMULARIO DE CONTACTO VIP & DOSSIER EXCLUSIVO
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="contacto" class="bg-brand-dark py-24 sm:py-32 border-t border-white/5 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-5 space-y-6">
+          <span class="text-xs font-bold tracking-widest text-brand-emerald uppercase">06 — Dossier de Inversión</span>
+          <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display leading-tight">
+            El momento de dar el salto urbano es <span class="text-gradient-emerald">hoy</span>.
+          </h2>
+          <p class="text-gray-400 text-base font-light leading-relaxed">
+            Déjanos tus datos y un consultor patrimonial senior te enviará el dossier privado con listas de precios cero y disponibilidades exclusivas.
+          </p>
+
+          <div class="p-6 apple-glass rounded-2xl border border-white/10 space-y-4">
+            <div class="flex items-center gap-3">
+              <i data-lucide="shield-check" class="w-5 h-5 text-brand-emerald"></i>
+              <span class="text-sm font-medium text-white">Garantía de Privacidad 100% Sin Spam</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <i data-lucide="phone" class="w-5 h-5 text-brand-emerald"></i>
+              <span class="text-sm font-medium text-white">Atención Inmediata por WhatsApp</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Box -->
+        <div class="lg:col-span-7 apple-glass p-8 sm:p-10 rounded-3xl border border-white/10">
+          <form id="leadForm" class="space-y-6">
+            
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Nombre Completo</label>
+              <input type="text" name="nombre" required placeholder="Ej. Carlos Mendoza" class="w-full apple-glass border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-brand-emerald">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Correo Electrónico</label>
+                <input type="email" name="email" required placeholder="carlos@empresa.com" class="w-full apple-glass border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-brand-emerald">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Número de WhatsApp</label>
+                <input type="tel" name="telefono" required placeholder="+57 300 000 0000" class="w-full apple-glass border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-brand-emerald">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Perfil de Interés</label>
+              <select name="interes" required class="w-full apple-glass border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-brand-emerald">
+                <option value="Inversión">Inversor — Busco Rentabilidad y Plusvalía</option>
+                <option value="Vivir">Comprador Final — Para Habitar</option>
+              </select>
+            </div>
+
+            <button type="submit" class="w-full pill-btn py-4 rounded-full bg-brand-emerald text-black font-bold text-sm tracking-wide uppercase hover:bg-white transition-all shadow-glow-emerald">
+              Recibir Dossier VIP &amp; Lista de Precios Cero
+            </button>
+
+            <p id="formStatus" class="text-xs text-center text-brand-emerald font-medium hidden">
+              ¡Gracias! Tu solicitud ha sido registrada. Te enviamos la información a tu WhatsApp.
+            </p>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       9. FOOTER CORPORATIVO & DERECHOS RESERVADOS
+       ═══════════════════════════════════════════════════════════════ -->
+  <footer class="bg-black border-t border-white/10 py-16 text-gray-400 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+        
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <img src="assets/img/prociv-icono-blanco.png" alt="PROCIV Logo" class="w-8 h-9 object-contain">
+            <span class="text-lg font-bold text-white font-display">PROCIV <span class="text-brand-emerald">Urban Group</span></span>
+          </div>
+          <p class="font-light leading-relaxed">
+            Forjando el nuevo estándar de la vida urbana en Colombia. Ingeniería sólida y vanguardia arquitectónica.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Explora</h4>
+          <ul class="space-y-2.5">
+            <li><a href="#proyectos" class="hover:text-brand-emerald">Proyectos en desarrollo</a></li>
+            <li><a href="#simulador" class="hover:text-brand-emerald">Simulador de Inversión</a></li>
+            <li><a href="#transformacion" class="hover:text-brand-emerald">Scrollytelling</a></li>
+            <li><a href="#bento" class="hover:text-brand-emerald">Amenidades Premium</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Compañía</h4>
+          <ul class="space-y-2.5">
+            <li><a href="#vision" class="hover:text-brand-emerald">Manifiesto</a></li>
+            <li><a href="#vision" class="hover:text-brand-emerald">Sostenibilidad</a></li>
+            <li><a href="#contacto" class="hover:text-brand-emerald">Prensa &amp; Inversionistas</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Contacto Directo</h4>
+          <ul class="space-y-2.5">
+            <li>Calle 101 #70G-53, Bogotá, Colombia</li>
+            <li><a href="https://wa.me/573246508105" target="_blank" class="hover:text-brand-emerald">WhatsApp: +57 324 650 8105</a></li>
+            <li><a href="mailto:contacto@prociv.co" class="hover:text-brand-emerald">contacto@prociv.co</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-gray-500">
+        <p>© <span id="year">2026</span> PROCIV Urban Group. Todos los derechos reservados.</p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-gray-300">Políticas de Privacidad</a>
+          <a href="#" class="hover:text-gray-300">Términos de Uso</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       JAVASCRIPT LOGIC & GSAP ANIMATIONS
+       ═══════════════════════════════════════════════════════════════ -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Set Current Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // ROI Simulator Interactive Math
+    const investmentSlider = document.getElementById('investmentSlider');
+    const investmentVal = document.getElementById('investmentVal');
+    const yearsSlider = document.getElementById('yearsSlider');
+    const yearsVal = document.getElementById('yearsVal');
+    const modelSelect = document.getElementById('modelSelect');
+
+    const appreciationOutput = document.getElementById('appreciationOutput');
+    const monthlyIncomeOutput = document.getElementById('monthlyIncomeOutput');
+    const totalReturnOutput = document.getElementById('totalReturnOutput');
+
+    function formatCOP(amount) {
+      return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(amount);
+    }
+
+    function calculateROI() {
+      const investment = parseFloat(investmentSlider.value);
+      const years = parseInt(yearsSlider.value);
+      const modelMultiplier = parseFloat(modelSelect.value);
+
+      investmentVal.textContent = formatCOP(investment);
+      yearsVal.textContent = `${years} ${years === 1 ? 'Año' : 'Años'}`;
+
+      // Annual appreciation estimation ~8.4% yearly
+      const appreciationRate = 0.084;
+      const totalAppreciation = investment * Math.pow(1 + appreciationRate, years) - investment;
+
+      // Estimated Monthly Rent Income
+      const monthlyIncome = (investment * 0.006) * modelMultiplier;
+
+      // Total ROI percentage
+      const totalRentalIncome = monthlyIncome * 12 * years;
+      const totalProfit = totalAppreciation + totalRentalIncome;
+      const totalReturnPct = ((totalProfit / investment) * 100).toFixed(1);
+
+      appreciationOutput.textContent = formatCOP(totalAppreciation);
+      monthlyIncomeOutput.textContent = formatCOP(monthlyIncome);
+      totalReturnOutput.textContent = `+${totalReturnPct}%`;
+    }
+
+    investmentSlider.addEventListener('input', calculateROI);
+    yearsSlider.addEventListener('input', calculateROI);
+    modelSelect.addEventListener('change', calculateROI);
+    calculateROI();
+
+    // Scrollytelling Video Scrubbing & Timeline Interactive Triggers
+    const scrollyVideo = document.getElementById('scrollyVideo');
+    const stage1 = document.getElementById('stage1-card');
+    const stage2 = document.getElementById('stage2-card');
+    const stage3 = document.getElementById('stage3-card');
+
+    const scrollyStageBadge = document.getElementById('scrollyStageBadge');
+    const scrollyStageDesc = document.getElementById('scrollyStageDesc');
+
+    function setStage(stageNum) {
+      [stage1, stage2, stage3].forEach((stg, idx) => {
+        if (idx === stageNum - 1) {
+          stg.classList.add('border-l-brand-emerald', 'opacity-100');
+          stg.classList.remove('border-l-transparent', 'opacity-70');
+        } else {
+          stg.classList.remove('border-l-brand-emerald', 'opacity-100');
+          stg.classList.add('border-l-transparent', 'opacity-70');
+        }
+      });
+
+      if (stageNum === 1) {
+        scrollyStageBadge.textContent = "FASE 1: DETECCIÓN DE SUELO Y LOTE";
+        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30";
+        scrollyStageDesc.textContent = "Análisis geoespacial y adquisición estratégica de suelo de alto potencial de renovación urbana.";
+        if(scrollyVideo.duration) scrollyVideo.currentTime = 0;
+      } else if (stageNum === 2) {
+        scrollyStageBadge.textContent = "FASE 2: INGENIERÍA Y ELEVACIÓN";
+        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-brand-blue/20 text-brand-blue border border-brand-blue/30";
+        scrollyStageDesc.textContent = "Despliegue de estructura de vanguardia sismorresistente con certificaciones de eficiencia sostenible.";
+        if(scrollyVideo.duration) scrollyVideo.currentTime = scrollyVideo.duration * 0.45;
+      } else if (stageNum === 3) {
+        scrollyStageBadge.textContent = "FASE 3: ENTREGA Y MÁXIMA PLUSVALÍA";
+        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-400 border border-purple-400/30";
+        scrollyStageDesc.textContent = "Edificio icónico finalizado, vida metropolitana integrada y consolidación de retorno para inversionistas.";
+        if(scrollyVideo.duration) scrollyVideo.currentTime = scrollyVideo.duration * 0.9;
+      }
+    }
+
+    stage1.addEventListener('click', () => setStage(1));
+    stage2.addEventListener('click', () => setStage(2));
+    stage3.addEventListener('click', () => setStage(3));
+
+    // GSAP ScrollTrigger Integration for Scrollytelling
+    gsap.registerPlugin(ScrollTrigger);
+
+    ScrollTrigger.create({
+      trigger: "#transformacion",
+      start: "top 60%",
+      end: "bottom 40%",
+      onUpdate: (self) => {
+        const progress = self.progress;
+        if (scrollyVideo && scrollyVideo.duration) {
+          scrollyVideo.currentTime = scrollyVideo.duration * progress;
+        }
+        if (progress < 0.33) {
+          setStage(1);
+        } else if (progress < 0.66) {
+          setStage(2);
+        } else {
+          setStage(3);
+        }
+      }
+    });
+
+    // Form Submission Handling
+    const leadForm = document.getElementById('leadForm');
+    const formStatus = document.getElementById('formStatus');
+
+    leadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      formStatus.classList.remove('hidden');
+      leadForm.reset();
+      setTimeout(() => {
+        formStatus.classList.add('hidden');
+      }, 6000);
+    });
+  </script>
 </body>
 </html>
