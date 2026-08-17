@@ -10,10 +10,11 @@ module.exports = {
       },
       colors: {
         brand: {
-          black: '#000000',
-          dark: '#05070B',
-          card: '#0B0F19',
-          cardHover: '#111827',
+          black: '#01060F',          /* casi negro, con base azul */
+          night: '#020C1C',          /* fondo general del sitio */
+          dark: '#04142E',           /* secciones alternas */
+          card: '#062146',           /* tarjetas */
+          cardHover: '#0A2E5E',
           blue: '#054BA6',
           blueLight: '#4C94E8',
           blueDark: '#033571',

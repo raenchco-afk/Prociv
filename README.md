@@ -71,7 +71,7 @@ día lo cambias por un metraje más claro y el titular cuesta de leer, sube la
 opacidad en esa única regla:
 
 ```css
-.hero-slab { background: rgba(6, 11, 20, .62); }   /* ← sube a .72 y listo */
+.hero-slab { background: rgba(4, 18, 40, .62); }   /* ← sube a .72 y listo */
 ```
 
 ---
@@ -93,6 +93,7 @@ teléfono +57 324 650 8105 · contacto@prociv.co.
 |---|---|---|
 | Textos y secciones | `index.html` | en orden, con comentarios `═══` por sección |
 | Azul de marca | `index.html` (bloque `<style>`) y `build-tailwind.config.js` | `#054BA6` corporativo · `#4C94E8` sobre fondo oscuro · `#033571` hover |
+| Fondos del sitio | `build-tailwind.config.js` | `night #020C1C` (general) · `dark #04142E` (secciones alternas) · `card #062146` · `black #01060F`. **Son azules, no grises**: el sitio entero se apoya en la familia del corporativo |
 | Losa del hero | `index.html` | regla `.hero-slab` |
 | Deriva del video | `index.html` | `.hero-drift` (26 s, escala 1 → 1,07) |
 | Cinta "Hacemos ciudad" | `index.html` | bloque `2.bis`, y velocidad en `@keyframes ticker` |
