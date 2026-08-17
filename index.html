@@ -40,17 +40,17 @@
               dark: '#05070B',
               card: '#0B0F19',
               cardHover: '#111827',
-              blue: '#0066FF',           /* Azul Corporativo PROCIV principal */
-              blueLight: '#00A3FF',      /* Azul Eléctrico vibrante */
-              blueDark: '#0047BB',       /* Azul Profundo */
+              blue: '#054BA6',           /* Azul Corporativo PROCIV */
+              blueLight: '#4C94E8',      /* Tinte claro: texto y filetes sobre negro */
+              blueDark: '#033571',       /* Azul profundo: estados hover */
               titanium: '#94A3B8',
-              border: 'rgba(0, 102, 255, 0.15)',
-              borderLight: 'rgba(0, 163, 255, 0.3)',
+              border: 'rgba(5, 75, 166, 0.18)',
+              borderLight: 'rgba(76, 148, 232, 0.32)',
             }
           },
           boxShadow: {
-            'glow-blue': '0 0 50px -10px rgba(0, 102, 255, 0.45)',
-            'glow-cyan': '0 0 50px -10px rgba(0, 163, 255, 0.45)',
+            'glow-blue': '0 0 50px -10px rgba(5, 75, 166, 0.55)',
+            'glow-cyan': '0 0 50px -10px rgba(76, 148, 232, 0.45)',
             'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.7)',
           }
         }
@@ -77,18 +77,18 @@
       background: rgba(11, 15, 25, 0.75);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(0, 102, 255, 0.18);
+      border: 1px solid rgba(5, 75, 166, 0.22);
     }
 
     .apple-glass-nav {
       background: rgba(3, 7, 18, 0.82);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+      border-bottom: 1px solid rgba(5, 75, 166, 0.26);
     }
 
     .text-gradient-blue {
-      background: linear-gradient(135deg, #FFFFFF 0%, #38BDF8 40%, #0066FF 100%);
+      background: linear-gradient(135deg, #FFFFFF 0%, #4C94E8 38%, #054BA6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -104,13 +104,13 @@
     }
     .pill-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px -5px rgba(0, 102, 255, 0.5);
+      box-shadow: 0 12px 30px -5px rgba(5, 75, 166, 0.55);
     }
 
     /* Custom range slider styling in PROCIV Blue */
     input[type=range] {
       -webkit-appearance: none;
-      background: rgba(0, 102, 255, 0.15);
+      background: rgba(5, 75, 166, 0.18);
       border-radius: 9999px;
       height: 6px;
     }
@@ -119,13 +119,28 @@
       height: 22px;
       width: 22px;
       border-radius: 50%;
-      background: #0066FF;
+      background: #054BA6;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 163, 255, 0.9);
+      box-shadow: 0 0 20px rgba(76, 148, 232, 0.9);
       transition: transform 0.1s ease;
     }
     input[type=range]::-webkit-slider-thumb:hover {
       transform: scale(1.25);
+    }
+
+    /* Con el video crudo detrás, la legibilidad la da el tipo, no una capa
+       oscura encima de la imagen. */
+    .hero-type { text-shadow: 0 2px 28px rgba(0,0,0,.6), 0 1px 4px rgba(0,0,0,.45); }
+
+    /* Cinta "HACEMOS CIUDAD": la frase de valla del brand book */
+    .ticker { overflow: hidden; }
+    .ticker__track { display: flex; width: max-content; animation: ticker 42s linear infinite; }
+    .ticker:hover .ticker__track { animation-play-state: paused; }
+    @keyframes ticker { to { transform: translateX(-50%); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ticker__track { animation: none; }
+      * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
     }
 
     /* Hide scrollbar */
@@ -156,6 +171,7 @@
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
           <a href="#vision" class="hover:text-white transition-colors">Visión</a>
           <a href="#transformacion" class="hover:text-brand-blueLight transition-colors">Scrollytelling</a>
+          <a href="#metodo" class="hover:text-white transition-colors">Método</a>
           <a href="#bento" class="hover:text-white transition-colors">Amenidades</a>
           <a href="#simulador" class="hover:text-brand-blueLight transition-colors">Simulador ROI</a>
           <a href="#proyectos" class="hover:text-white transition-colors">Proyectos</a>
@@ -203,13 +219,16 @@
        ═══════════════════════════════════════════════════════════════ -->
   <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden">
     
-    <!-- Background Video: Dynamic Cloud Movement & Building Growth -->
+    <!-- Fondo: nubes en movimiento y crecimiento del edificio.
+         El video va CRUDO: sin opacidad reducida y sin degradado encima,
+         como pide el brief. La legibilidad se resuelve en las piezas de
+         vidrio del contenido, no oscureciendo la imagen.
+         Sube tu hero.mp4 junto a este archivo y se usará automáticamente. -->
     <div class="absolute inset-0 z-0">
-      <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-50 scale-105 transform transition-transform duration-1000">
+      <video autoplay loop muted playsinline class="w-full h-full object-cover">
+        <source src="hero.mp4" type="video/mp4">
         <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
       </video>
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/80"></div>
-      <div class="absolute inset-0 bg-radial-at-c from-brand-blue/10 via-transparent to-transparent pointer-events-none"></div>
     </div>
 
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
@@ -221,13 +240,13 @@
       </div>
 
       <!-- Main Headline Monumental -->
-      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight font-display text-white max-w-5xl leading-[1.08] mb-6">
+      <h1 class="hero-type text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight font-display text-white max-w-5xl leading-[1.08] mb-6">
         El futuro se construye <br class="hidden sm:inline">
         <span class="text-gradient-blue">desde el origen.</span>
       </h1>
 
       <!-- Evocative Subtitle -->
-      <p class="text-lg sm:text-xl md:text-2xl text-gray-300 font-light max-w-3xl leading-relaxed mb-10">
+      <p class="hero-type text-lg sm:text-xl md:text-2xl text-gray-200 font-light max-w-3xl leading-relaxed mb-10">
         Transformamos suelo estratégico en iconos arquitectónicos de altura. Renovación urbana de vanguardia que revaloriza ciudades y maximiza tu patrimonio.
       </p>
 
@@ -265,6 +284,31 @@
 
     </div>
   </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       2.bis CINTA — "HACEMOS CIUDAD", la frase de valla del brand book
+       ═══════════════════════════════════════════════════════════════ -->
+  <div class="ticker bg-brand-blue text-white py-3.5 border-y border-white/15" aria-hidden="true">
+    <div class="ticker__track">
+      <div class="flex items-center gap-10 pr-10 text-[13px] font-semibold tracking-[0.28em] uppercase whitespace-nowrap">
+        <span>Hacemos ciudad</span><i class="not-italic opacity-50">/</i>
+        <span>Progreso</span><i class="not-italic opacity-50">/</i>
+        <span>Ciudad</span><i class="not-italic opacity-50">/</i>
+        <span>Valor</span><i class="not-italic opacity-50">/</i>
+        <span>Desarrollamos lo que viene</span><i class="not-italic opacity-50">/</i>
+        <span>Bogotá</span><i class="not-italic opacity-50">/</i>
+      </div>
+      <div class="flex items-center gap-10 pr-10 text-[13px] font-semibold tracking-[0.28em] uppercase whitespace-nowrap">
+        <span>Hacemos ciudad</span><i class="not-italic opacity-50">/</i>
+        <span>Progreso</span><i class="not-italic opacity-50">/</i>
+        <span>Ciudad</span><i class="not-italic opacity-50">/</i>
+        <span>Valor</span><i class="not-italic opacity-50">/</i>
+        <span>Desarrollamos lo que viene</span><i class="not-italic opacity-50">/</i>
+        <span>Bogotá</span><i class="not-italic opacity-50">/</i>
+      </div>
+    </div>
+  </div>
 
 
   <!-- ═══════════════════════════════════════════════════════════════════
@@ -418,6 +462,63 @@
           </p>
         </div>
 
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       4.bis MÉTODO — cinco pasos en orden.
+       Va numerado porque es una secuencia real, no decoración.
+       ═══════════════════════════════════════════════════════════════ -->
+  <section id="metodo" class="bg-black py-24 sm:py-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-8 h-px bg-brand-blueLight"></span>
+        <p class="text-xs font-semibold tracking-[0.22em] uppercase text-brand-blueLight">Cómo hacemos ciudad</p>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight font-display text-white max-w-3xl leading-[1.08] mb-14">
+        De la lectura de la ciudad<br class="hidden sm:inline"> al espacio construido.
+      </h2>
+
+      <div class="border-t border-white/10">
+        <div class="grid sm:grid-cols-[5rem_1fr] gap-x-6 gap-y-1 py-7 border-b border-white/10 group hover:bg-white/[0.02] transition-colors">
+          <span class="text-sm font-semibold tracking-wider text-brand-blueLight tabular-nums">01</span>
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">Observamos</h3>
+            <p class="text-sm text-gray-400 font-light leading-relaxed max-w-2xl">Entendemos cómo se mueve la ciudad antes de dibujar una sola línea.</p>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-[5rem_1fr] gap-x-6 gap-y-1 py-7 border-b border-white/10 group hover:bg-white/[0.02] transition-colors">
+          <span class="text-sm font-semibold tracking-wider text-brand-blueLight tabular-nums">02</span>
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">Identificamos</h3>
+            <p class="text-sm text-gray-400 font-light leading-relaxed max-w-2xl">Encontramos ubicaciones donde la ciudad ya está creciendo o va a transformarse.</p>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-[5rem_1fr] gap-x-6 gap-y-1 py-7 border-b border-white/10 group hover:bg-white/[0.02] transition-colors">
+          <span class="text-sm font-semibold tracking-wider text-brand-blueLight tabular-nums">03</span>
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">Diseñamos</h3>
+            <p class="text-sm text-gray-400 font-light leading-relaxed max-w-2xl">Convertimos esa lectura en arquitectura que responde a nuevas formas de vivir.</p>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-[5rem_1fr] gap-x-6 gap-y-1 py-7 border-b border-white/10 group hover:bg-white/[0.02] transition-colors">
+          <span class="text-sm font-semibold tracking-wider text-brand-blueLight tabular-nums">04</span>
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">Desarrollamos</h3>
+            <p class="text-sm text-gray-400 font-light leading-relaxed max-w-2xl">Llevamos la visión a espacios reales, con control de tiempos y de costos.</p>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-[5rem_1fr] gap-x-6 gap-y-1 py-7 border-b border-white/10 group hover:bg-white/[0.02] transition-colors">
+          <span class="text-sm font-semibold tracking-wider text-brand-blueLight tabular-nums">05</span>
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">Generamos valor</h3>
+            <p class="text-sm text-gray-400 font-light leading-relaxed max-w-2xl">Para quien compra, quien vive, quien invierte y para el entorno que lo rodea.</p>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -696,6 +797,21 @@
 
       </div>
 
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       7.bis DECLARACIÓN — el gran concepto, a pantalla partida
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="bg-brand-blue text-white py-20 sm:py-28 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8 md:gap-16 md:items-center">
+      <p class="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight leading-[1.08] text-white/70">
+        No construimos para llenar la ciudad.
+      </p>
+      <p class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight leading-[1.08] border-l-2 border-white/45 pl-7">
+        Construimos para hacerla mejor.
+      </p>
     </div>
   </section>
 
