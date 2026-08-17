@@ -10,11 +10,11 @@
   --concrete:   #94A3B8;   /* gris titanio arquitectónico */
   --bone:       #F8FAFC;   /* blanco frío */
   --sand:       #E2E8F0;   /* gris mineral */
-  --signal:     #0066FF;   /* acento Azul Corporativo PROCIV */
-  --prociv-blue:#0066FF;   /* Azul Corporativo PROCIV */
-  --prociv-light:#00A3FF;  /* Azul Eléctrico */
-  --prociv-dark: #0047BB;  /* Azul Profundo */
-  --sage:       #003380;   /* toque azul de profundidad */
+  --signal:     #054BA6;   /* acento Azul Corporativo PROCIV */
+  --prociv-blue:#054BA6;   /* Azul Corporativo PROCIV */
+  --prociv-light:#4C94E8;  /* Azul Eléctrico */
+  --prociv-dark: #033571;  /* Azul Profundo */
+  --sage:       #033571;   /* toque azul de profundidad */
 
   --page-px:    1.5rem;    /* 24px  · móvil */
   --page-px-md: 3rem;      /* 48px  · tablet */

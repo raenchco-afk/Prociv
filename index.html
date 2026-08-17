@@ -16,52 +16,24 @@
   <meta property="og:image" content="assets/img/prociv-logo-navy.png">
 
   <link rel="icon" href="assets/img/prociv-icono-blanco.png" type="image/png">
-  <link rel="canonical" href="https://www.procivurbangroup.com/">
+  <link rel="canonical" href="https://prociv.co/">
+  <meta property="og:url" content="https://prociv.co/">
 
   <!-- Google Fonts: Inter & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'Plus Jakarta Sans', 'sans-serif'],
-            display: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              black: '#000000',
-              dark: '#05070B',
-              card: '#0B0F19',
-              cardHover: '#111827',
-              blue: '#054BA6',           /* Azul Corporativo PROCIV */
-              blueLight: '#4C94E8',      /* Tinte claro: texto y filetes sobre negro */
-              blueDark: '#033571',       /* Azul profundo: estados hover */
-              titanium: '#94A3B8',
-              border: 'rgba(5, 75, 166, 0.18)',
-              borderLight: 'rgba(76, 148, 232, 0.32)',
-            }
-          },
-          boxShadow: {
-            'glow-blue': '0 0 50px -10px rgba(5, 75, 166, 0.55)',
-            'glow-cyan': '0 0 50px -10px rgba(76, 148, 232, 0.45)',
-            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.7)',
-          }
-        }
-      }
-    }
-  </script>
+  <!-- Tailwind compilado a CSS estático (21 KB).
+       Antes esto era cdn.tailwindcss.com, que compila en el navegador:
+       ~400 KB de JavaScript y un parpadeo sin estilos al cargar.
+       Para regenerarlo: ver README, sección "Recompilar el CSS". -->
+  <link rel="stylesheet" href="assets/css/tailwind.css">
 
-  <!-- Lucide Icons & GSAP + ScrollTrigger -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Iconos (subconjunto propio, 3 KB) y GSAP + ScrollTrigger, todo local -->
+  <script src="assets/js/icons.js" defer></script>
+  <script src="assets/js/gsap.min.js" defer></script>
+  <script src="assets/js/ScrollTrigger.min.js" defer></script>
 
   <style>
     /* Custom Apple Glassmorphism and Typographic Enhancements in Corporate Blue */
@@ -88,7 +60,7 @@
     }
 
     .text-gradient-blue {
-      background: linear-gradient(135deg, #FFFFFF 0%, #4C94E8 38%, #054BA6 100%);
+      background: linear-gradient(135deg, #FFFFFF 0%, #9FC6F5 30%, #4C94E8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -128,9 +100,27 @@
       transform: scale(1.25);
     }
 
-    /* Con el video crudo detrás, la legibilidad la da el tipo, no una capa
-       oscura encima de la imagen. */
-    .hero-type { text-shadow: 0 2px 28px rgba(0,0,0,.6), 0 1px 4px rgba(0,0,0,.45); }
+    /* Losa del hero: es la pieza que sostiene TODO el texto sobre un cielo
+       claro, así que va más opaca que el vidrio normal. El @supports da un
+       respaldo sólido donde no hay backdrop-filter (Firefox antiguo, algunos
+       Android), porque ahí un vidrio transparente dejaría el texto ilegible. */
+    .hero-slab {
+      background: rgba(6, 11, 20, .62);
+      backdrop-filter: blur(28px) saturate(140%);
+      -webkit-backdrop-filter: blur(28px) saturate(140%);
+    }
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .hero-slab { background: rgba(6, 11, 20, .88); }
+    }
+
+    /* Deriva lentísima del fondo: el edificio "respira" sin marear.
+       Sustituye al scale-105 fijo que tenía antes. */
+    .hero-drift { transform-origin: 50% 62%; animation: heroDrift 26s ease-in-out infinite alternate; }
+    @keyframes heroDrift { from { transform: scale(1); } to { transform: scale(1.07); } }
+
+    /* Entrada de las piezas del hero */
+    .reveal-up { animation: revealUp .9s cubic-bezier(.22,.61,.36,1) both; animation-delay: var(--reveal-delay, 0ms); }
+    @keyframes revealUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 
     /* Cinta "HACEMOS CIUDAD": la frase de valla del brand book */
     .ticker { overflow: hidden; }
@@ -217,71 +207,76 @@
   <!-- ═══════════════════════════════════════════════════════════════════
        2. HERO MONUMENTAL CON NUBES & CRECIMIENTO DEL EDIFICIO EN VIVO
        ═══════════════════════════════════════════════════════════════ -->
-  <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-28 pb-16 overflow-hidden">
-    
-    <!-- Fondo: nubes en movimiento y crecimiento del edificio.
-         El video va CRUDO: sin opacidad reducida y sin degradado encima,
-         como pide el brief. La legibilidad se resuelve en las piezas de
-         vidrio del contenido, no oscureciendo la imagen.
-         Sube tu hero.mp4 junto a este archivo y se usará automáticamente. -->
+  <section id="inicio" class="relative min-h-screen flex flex-col justify-end pt-28 pb-10 sm:pb-14 overflow-hidden">
+
+    <!-- Fondo: el edificio creciendo entre nubes.
+         El video va CRUDO — sin opacidad reducida y sin degradado encima.
+         El cielo de este metraje es claro (luminancia 100-160), así que la
+         legibilidad la resuelve la losa de vidrio del contenido, no una capa
+         oscura sobre la imagen. Y el contenido va ANCLADO ABAJO para no tapar
+         el edificio, que es lo que la toma está contando. -->
     <div class="absolute inset-0 z-0">
-      <video autoplay loop muted playsinline class="w-full h-full object-cover">
+      <video autoplay loop muted playsinline preload="auto"
+             class="w-full h-full object-cover hero-drift">
+        <source src="assets/video/hero.mp4" type="video/mp4">
         <source src="hero.mp4" type="video/mp4">
-        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
       </video>
     </div>
 
-    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-      
-      <!-- Top Badge Pill in PROCIV Corporate Blue -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full apple-glass text-xs font-semibold text-brand-blueLight tracking-wide uppercase mb-8 shadow-glow-blue border border-brand-blue/40">
-        <span class="w-2 h-2 rounded-full bg-brand-blueLight animate-pulse"></span>
-        <span>Redefiniendo el Hábitat Urbano en Colombia</span>
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] gap-6 lg:gap-10 lg:items-end">
+
+        <!-- Losa de vidrio: todo el texto vive aquí -->
+        <div class="hero-slab rounded-3xl p-7 sm:p-9 lg:p-10 shadow-glass border border-white/15 reveal-up">
+
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue/25 border border-brand-blueLight/40 text-[11px] font-semibold text-white tracking-[0.14em] uppercase mb-7">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-blueLight motion-safe:animate-pulse"></span>
+            <span>Redefiniendo el hábitat urbano en Colombia</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-[-0.04em] font-display text-white leading-[1.02] mb-5">
+            El futuro se construye <br class="hidden sm:inline">
+            <span class="text-gradient-blue">desde el origen.</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-gray-200 font-light leading-relaxed max-w-2xl mb-8">
+            Transformamos suelo estratégico en iconos arquitectónicos de altura. Renovación urbana
+            de vanguardia que revaloriza ciudades y maximiza tu patrimonio.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-3.5">
+            <a href="#transformacion" class="pill-btn text-sm font-bold px-7 py-3.5 rounded-full bg-brand-blue text-white hover:bg-brand-blueDark shadow-glow-blue transition-all flex items-center justify-center gap-2.5">
+              <span>Ver cómo crece</span>
+              <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+            </a>
+            <a href="#simulador" class="text-sm font-semibold px-7 py-3.5 rounded-full bg-white/10 border border-white/25 text-white hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2.5">
+              <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+              <span>Simulador de ROI</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Cifras: rejilla 2×2 sobre vidrio, alineada al pie -->
+        <div class="grid grid-cols-2 gap-3 reveal-up" style="--reveal-delay:160ms">
+          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+            <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display tabular-nums">+38%</p>
+            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Plusvalía proyectada</p>
+          </div>
+          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+            <p class="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums">+3.500 m²</p>
+            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">En desarrollo activo</p>
+          </div>
+          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+            <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display tabular-nums">14,5% E.A.</p>
+            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Retorno estimado</p>
+          </div>
+          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+            <p class="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums">100%</p>
+            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Ubicación AAA</p>
+          </div>
+        </div>
+
       </div>
-
-      <!-- Main Headline Monumental -->
-      <h1 class="hero-type text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight font-display text-white max-w-5xl leading-[1.08] mb-6">
-        El futuro se construye <br class="hidden sm:inline">
-        <span class="text-gradient-blue">desde el origen.</span>
-      </h1>
-
-      <!-- Evocative Subtitle -->
-      <p class="hero-type text-lg sm:text-xl md:text-2xl text-gray-200 font-light max-w-3xl leading-relaxed mb-10">
-        Transformamos suelo estratégico en iconos arquitectónicos de altura. Renovación urbana de vanguardia que revaloriza ciudades y maximiza tu patrimonio.
-      </p>
-
-      <!-- Dual Action Buttons -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-16">
-        <a href="#transformacion" class="w-full sm:w-auto pill-btn text-base font-bold px-8 py-4 rounded-full bg-brand-blue text-white hover:bg-brand-blueLight shadow-glow-blue transition-all flex items-center justify-center gap-3">
-          <span>Ver Elevación y Nubes</span>
-          <i data-lucide="play" class="w-4 h-4 fill-current"></i>
-        </a>
-        <a href="#simulador" class="w-full sm:w-auto text-base font-semibold px-8 py-4 rounded-full apple-glass text-white hover:border-brand-blueLight/50 transition-all flex items-center justify-center gap-3">
-          <i data-lucide="calculator" class="w-4 h-4 text-brand-blueLight"></i>
-          <span>Simulador de ROI</span>
-        </a>
-      </div>
-
-      <!-- Floating Stat Metric Cards in PROCIV Blue -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
-        <div class="apple-glass p-5 rounded-2xl text-center border border-brand-blue/20 hover:border-brand-blueLight transition-all">
-          <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display">+38%</p>
-          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">Plusvalía Proyectada</p>
-        </div>
-        <div class="apple-glass p-5 rounded-2xl text-center border border-brand-blue/20 hover:border-brand-blueLight transition-all">
-          <p class="text-2xl sm:text-3xl font-extrabold text-white font-display">+3.500 m²</p>
-          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">En Desarrollo Activo</p>
-        </div>
-        <div class="apple-glass p-5 rounded-2xl text-center border border-brand-blue/20 hover:border-brand-blueLight transition-all">
-          <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display">14.5% E.A.</p>
-          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">Retorno Estimado</p>
-        </div>
-        <div class="apple-glass p-5 rounded-2xl text-center border border-brand-blue/20 hover:border-brand-blueLight transition-all">
-          <p class="text-2xl sm:text-3xl font-extrabold text-white font-display">100%</p>
-          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mt-1">Ubicación AAA</p>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -361,7 +356,7 @@
           <!-- Stage 3 -->
           <div id="stage3-card" class="stage-card p-6 rounded-2xl apple-glass border-l-4 border-l-transparent transition-all duration-300 cursor-pointer hover:bg-brand-blue/10 opacity-70">
             <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Fase 03 — 100% Scroll</span>
+              <span class="text-xs font-bold text-brand-blueLight uppercase tracking-wider">Fase 03 — 100% Scroll</span>
               <span class="text-xs text-gray-400 font-mono">Entrega &amp; Valor</span>
             </div>
             <h3 class="text-xl font-bold text-white mb-2">Un Nuevo Ícono Inmobiliario</h3>
@@ -376,7 +371,7 @@
         <div class="lg:col-span-7 relative h-[480px] sm:h-[550px] rounded-3xl overflow-hidden border border-brand-blue/30 shadow-glow-blue bg-black">
           
           <video id="scrollyVideo" muted playsinline preload="auto" class="w-full h-full object-cover">
-            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+            <source src="assets/video/hero.mp4" type="video/mp4">
           </video>
 
           <!-- Overlay Gradient & Dynamic Caption -->
@@ -713,7 +708,7 @@
               </div>
               <div class="p-4 rounded-2xl bg-brand-blue/10 border border-brand-blue/20 text-center">
                 <span class="text-[11px] text-gray-400 uppercase font-medium">Retorno Total Est.</span>
-                <p id="totalReturnOutput" class="text-xl font-bold text-cyan-400 font-mono mt-1">+114.2%</p>
+                <p id="totalReturnOutput" class="text-xl font-bold text-brand-blueLight font-mono mt-1">+114.2%</p>
               </div>
             </div>
 
@@ -757,7 +752,7 @@
         <!-- Video Canvas Column (Replaced static image with dynamic cloud/city video loop) -->
         <div class="lg:col-span-7 relative min-h-[380px] overflow-hidden bg-black">
           <video autoplay loop muted playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 opacity-90">
-            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4" type="video/mp4">
+            <source src="assets/video/hero.mp4" type="video/mp4">
           </video>
           
           <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
@@ -1038,7 +1033,7 @@
         if(scrollyVideo && scrollyVideo.duration) scrollyVideo.currentTime = scrollyVideo.duration * 0.45;
       } else if (stageNum === 3) {
         scrollyStageBadge.textContent = "FASE 3: ENTREGA Y MÁXIMA PLUSVALÍA";
-        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-400/40";
+        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-brand-blue/30 text-white border border-brand-blueLight/50";
         scrollyStageDesc.textContent = "Edificio icónico finalizado, vida metropolitana integrada y consolidación de retorno para inversionistas.";
         if(scrollyVideo && scrollyVideo.duration) scrollyVideo.currentTime = scrollyVideo.duration * 0.9;
       }

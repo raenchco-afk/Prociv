@@ -1,159 +1,120 @@
 # PROCIV Urban Group — sitio estático para SiteGround
 
-Sitio listo para **subir y pegar**. No necesita Node, ni build, ni Vite: son
-archivos HTML/CSS/JS planos que cualquier hosting compartido sirve tal cual.
+Archivos planos: HTML, CSS y JS. No necesita Node ni build para funcionar — solo
+para **regenerar** el CSS si cambias clases (ver el último apartado).
 
 ---
 
-## 1. Estructura de carpetas
-
-Súbela **exactamente así** (respetando mayúsculas y nombres):
+## 1. Estructura
 
 ```
-public_html/                  ← raíz de tu dominio en SiteGround
-├── index.html
-├── .htaccess                 ← archivo oculto: activa "Show hidden files"
+public_html/                       ← raíz de tu dominio
+├── index.html                     Home
+├── citylive101.html               Ficha del proyecto
+├── .htaccess                      ARCHIVO OCULTO: activa "Show hidden files"
 ├── robots.txt
+├── build-tailwind.config.js       solo para recompilar; no lo sirve el navegador
 └── assets/
     ├── css/
-    │   └── styles.css
+    │   ├── tailwind.css           22 KB · compilado, sin CDN
+    │   ├── citylive.css           estilos de la ficha de proyecto
+    │   └── styles.css             hoja de la versión anterior (sin usar hoy)
     ├── js/
-    │   └── main.js
+    │   ├── icons.js               10 iconos propios · 3 KB
+    │   ├── gsap.min.js            animación del scrollytelling
+    │   ├── ScrollTrigger.min.js
+    │   ├── citylive.js
+    │   └── main.js                script de la versión anterior (sin usar hoy)
     ├── img/
-    │   └── favicon.svg
-    └── video/                ← opcional (ver punto 4)
-        └── hero.mp4
+    │   ├── prociv-logo-navy.png
+    │   ├── prociv-icono-blanco.png
+    │   ├── favicon.png · favicon.svg
+    │   └── citylive/              galería del proyecto
+    └── video/
+        └── hero.mp4               2,6 MB · el edificio creciendo entre nubes
 ```
 
-Si el sitio va en un subdirectorio (por ejemplo `tudominio.com/prociv`),
-sube la misma estructura dentro de `public_html/prociv/`. Todas las rutas del
-HTML son **relativas**, así que funciona igual sin tocar una sola línea.
+Las rutas del HTML son **relativas**: la misma estructura funciona igual en la
+raíz del dominio, en `public_html/prociv/` o en un subdominio.
 
 ---
 
-## 2. Cómo subirlo (File Manager de SiteGround)
+## 2. Subirlo
 
-1. **Site Tools → Site → File Manager**.
-2. Entra a `public_html`.
-3. Comprime esta carpeta en un `.zip` desde tu computador
-   (selecciona el *contenido*: `index.html`, `.htaccess`, `assets/`, `robots.txt` — no la carpeta padre).
-4. En File Manager: **Upload → File**, sube el `.zip`.
-5. Clic derecho sobre el `.zip` → **Extract** → confirma en `public_html`.
-6. Borra el `.zip`.
-7. Activa el icono de **Settings → Show hidden files** para confirmar que
-   `.htaccess` quedó arriba. Si no lo ves, súbelo aparte.
+1. **Site Tools → Site → File Manager** → entra a `public_html`.
+2. Borra el `index.html` de la página "Under construction" si sigue ahí.
+3. **Upload → File** → sube el ZIP → clic derecho → **Extract**.
+4. **SiteGround crea una carpeta con el nombre del ZIP.** Entra, selecciona todo
+   (con *Show hidden files* activado, para no dejar atrás el `.htaccess`),
+   **Move** a la raíz y borra la carpeta vacía.
+5. **Site Tools → Speed → Caching → Flush Cache.**
 
-### Alternativa por FTP
-Host: tu dominio · Usuario y contraseña: **Site Tools → Devs → FTP Accounts** ·
-Puerto 21. Arrastra el contenido a `public_html`.
+Comprobación:
 
-### Alternativa por SSH
 ```bash
-scp -r sitio-prociv/* usuario@tuservidor:~/public_html/
-scp sitio-prociv/.htaccess usuario@tuservidor:~/public_html/
+curl -sS https://prociv.co | grep -i "<title>"
+curl -sSo /dev/null -w "css: %{http_code}\n" https://prociv.co/assets/css/tailwind.css
 ```
 
 ---
 
-## 3. Después de subir
+## 3. El video del hero
 
-- Entra a `https://tudominio.com` — debe verse el hero con el video.
-- Si el CSS no carga: verifica que la ruta sea `assets/css/styles.css` y no
-  `Assets/CSS/…` (Linux distingue mayúsculas).
-- **Site Tools → Speed → Caching**: si tienes Dynamic Cache activo, haz
-  **Flush Cache** después de cada actualización.
-- SSL: **Site Tools → Security → SSL Manager** → instala Let's Encrypt y activa
-  **HTTPS Enforce** (el `.htaccess` ya redirige, pero es mejor tener las dos).
+Va **incluido** en `assets/video/hero.mp4` (720p, 10 s, 2,6 MB). El HTML lo
+busca ahí primero y, como segunda opción, un `hero.mp4` en la raíz — así puedes
+cambiarlo dejando el archivo al lado del `index.html`, sin tocar código.
 
----
+El video se muestra **crudo**: sin opacidad reducida y sin degradado encima. Como
+su cielo es claro (luminancia media de 103 a 160), el texto del hero se apoya en
+una losa de vidrio (`.hero-slab`), no en una capa oscura sobre la imagen. Si algún
+día lo cambias por un metraje más claro y el titular cuesta de leer, sube la
+opacidad en esa única regla:
 
-## 4. El video del hero
-
-Por defecto el video se carga desde el CDN indicado en el brief
-(CloudFront), así que **funciona sin subir nada**.
-
-Para servirlo desde tu propio dominio (más control, sin depender de un CDN
-ajeno):
-
-1. Descarga el `.mp4` del brief.
-2. Súbelo a `assets/video/hero.mp4`.
-3. En `index.html`, dentro de `<video class="hero__video">`, deja el `source`
-   local **primero**:
-
-```html
-<source src="assets/video/hero.mp4" type="video/mp4">
-<source src="https://d8j0ntlcm91z4.cloudfront.net/…mp4" type="video/mp4">
+```css
+.hero-slab { background: rgba(6, 11, 20, .62); }   /* ← sube a .72 y listo */
 ```
 
-Recomendación: comprime el video a **menos de 8 MB** (por ejemplo con HandBrake,
-preset *Web → Gmail Large 3 Minutes 720p30*). Los planes compartidos de
-SiteGround no son un CDN de video.
+---
 
-**Póster** (imagen mientras carga el video): sube un `assets/img/hero-poster.jpg`
-y añade `poster="assets/img/hero-poster.jpg"` a la etiqueta `<video>`.
+## 4. El formulario
+
+El envío está en el `<script>` al final de `index.html`. Hoy muestra un mensaje de
+confirmación en pantalla; para que los datos lleguen a algún sitio hay que
+conectarlo a un endpoint (`fetch` con `POST`) o a un servicio tipo Formspree.
+
+Contacto ya publicado en el footer: Calle 101 #70G-53, Bogotá · WhatsApp y
+teléfono +57 324 650 8105 · contacto@prociv.co.
 
 ---
 
-## 5. El formulario de contacto
-
-Abre `assets/js/main.js`, primeras líneas:
-
-```js
-var FORM_ENDPOINT = '';                          // ← vacío = abre el correo del visitante
-var FORM_EMAIL    = 'contacto@prociv.co'; // ← destino del mailto
-```
-
-- **Sin tocar nada:** al enviar, se abre el cliente de correo del visitante con
-  los datos ya escritos. Cero configuración, funciona siempre.
-- **Con backend propio:** pon la URL en `FORM_ENDPOINT` (por ejemplo el endpoint
-  de leads del ERP). El formulario hará `POST` con JSON
-  `{ nombre, email, telefono, interes }`. Recuerda habilitar CORS para tu dominio.
-- **Con un servicio externo** (Formspree, Web3Forms…): pega su URL en
-  `FORM_ENDPOINT`; casi todos aceptan JSON.
-
-El footer ya incluye los datos de contacto de PROCIV: Calle 101 #70G-53,
-Bogotá · WhatsApp y teléfono +57 324 650 8105 · contacto@prociv.co.
-
----
-
-## 6. Qué editar para personalizar
+## 5. Dónde se edita cada cosa
 
 | Quiero cambiar… | Archivo | Dónde |
 |---|---|---|
-| Textos, secciones, proyectos | `index.html` | están en orden, con comentarios `═══` por sección |
-| Colores de marca | `assets/css/styles.css` | bloque `:root` (Obsidian, Concrete, Bone, Urban Sand, Signal, Sage) |
-| Titular animado del hero | `index.html` | atributo `data-animated-heading` (el salto de línea real = línea nueva) |
-| Velocidad de la animación | `assets/js/main.js` | `CHAR_DELAY` (30 ms) e `INITIAL_DELAY` (200 ms) |
-| Retardos de entrada | `index.html` | `data-fade-in="800"` (subtítulo), `1200` (botones), `1400` (tag) |
-| Correo, WhatsApp, dominio | `index.html` (footer) y `main.js` | — |
-| Favicon | `assets/img/favicon.svg` | monograma geométrico PROGRESO + CIUDAD + VALOR |
+| Textos y secciones | `index.html` | en orden, con comentarios `═══` por sección |
+| Azul de marca | `index.html` (bloque `<style>`) y `build-tailwind.config.js` | `#054BA6` corporativo · `#4C94E8` sobre fondo oscuro · `#033571` hover |
+| Losa del hero | `index.html` | regla `.hero-slab` |
+| Deriva del video | `index.html` | `.hero-drift` (26 s, escala 1 → 1,07) |
+| Cinta "Hacemos ciudad" | `index.html` | bloque `2.bis`, y velocidad en `@keyframes ticker` |
+| Método de 5 pasos | `index.html` | bloque `4.bis` |
+| Galería del proyecto | `citylive101.html` + `assets/img/citylive/` | — |
+
+**El azul vive en dos sitios**: el `<style>` embebido y el config de Tailwind. Si
+cambias uno, cambia el otro y recompila.
 
 ---
 
-## 7. Detalles fieles al brief del hero
+## 6. Accesibilidad y rendimiento
 
-- Video de fondo a pantalla completa (`object-fit: cover`), autoplay, loop,
-  muted, playsinline, **sin overlay, sin degradado y sin capa semitransparente**
-  encima. El video se ve crudo.
-- Tipografía **Inter** (300/400/500/600) cargada desde Google Fonts, con
-  `-webkit-font-smoothing: antialiased` y `-moz-osx-font-smoothing: grayscale`.
-- Navbar con `.liquid-glass`, esquinas `rounded-xl`, logo a la izquierda, enlaces
-  al centro (ocultos en móvil) y botón blanco *hablemos* a la derecha.
-- Contenido del hero anclado al fondo del viewport; en pantallas grandes, dos
-  columnas: contenido a la izquierda y tarjeta de vidrio
-  **LA EVOLUCIÓN DEL HÁBITAT URBANO** abajo a la derecha.
-- Titular con entrada **carácter por carácter**: cada uno arranca en
-  `opacity: 0` + `translateX(-18px)`, con retardo
-  `(línea × largoLínea × 30ms) + (índice × 30ms)`, transición de 500 ms y
-  200 ms de retardo inicial.
-- Paleta: negro, blanco, gris para texto secundario, bordes `white/20`.
-  Nada de morado ni índigo.
-- Respeta `prefers-reduced-motion`: si el visitante pidió menos animación, todo
-  aparece de una vez.
+- Todo local salvo Google Fonts: sin CDN de Tailwind (que compilaba en el
+  navegador), sin unpkg, sin cdnjs.
+- `prefers-reduced-motion` detiene la cinta, la deriva del video y las entradas.
+- El contraste del hero se resolvió con la losa; el azul corporativo `#054BA6` no
+  se usa como **texto** sobre negro (no llega al contraste mínimo): ahí va `#4C94E8`.
 
 ---
 
-## 8. Prueba local antes de subir
+## 7. Prueba local
 
 ```bash
 cd sitio-prociv
@@ -161,5 +122,30 @@ python3 -m http.server 8080
 # abre http://localhost:8080
 ```
 
-(Abrir el `index.html` con doble clic también funciona; solo el `.htaccess` no
-aplica fuera del servidor.)
+---
+
+## 8. Recompilar el CSS (solo si tocas clases de Tailwind)
+
+`assets/css/tailwind.css` está compilado y minificado. Las clases que no aparecen
+en el marcado **no existen** en la hoja, así que hay que regenerarla al añadir
+clases nuevas:
+
+```bash
+npm install -D tailwindcss@3.4.17
+printf '@tailwind base;@tailwind components;@tailwind utilities;' > /tmp/in.css
+npx tailwindcss -c build-tailwind.config.js -i /tmp/in.css -o assets/css/tailwind.css --minify
+```
+
+El config escanea `index.html` **incluido su JavaScript**, así que las clases que
+el simulador y el scrollytelling generan en caliente (`border-l-brand-blue`,
+`bg-brand-blue/20`…) entran solas. Verificado: las nueve están en la hoja.
+
+### Qué se sirve desde dónde
+
+| Recurso | Origen | Peso |
+|---|---|---|
+| Tailwind | `assets/css/tailwind.css` | 22 KB |
+| GSAP + ScrollTrigger | local | 114 KB |
+| Iconos | `assets/js/icons.js` — subconjunto propio | 3 KB (antes 352 KB con lucide completo) |
+| Video del hero | `assets/video/hero.mp4` | 2,6 MB |
+| Inter y Plus Jakarta Sans | Google Fonts | única dependencia externa |
