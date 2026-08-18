@@ -31,7 +31,8 @@ public_html/                       ← raíz de tu dominio
     │   ├── favicon.png · favicon.svg
     │   └── citylive/              galería del proyecto
     └── video/
-        └── hero.mp4               2,6 MB · el edificio creciendo entre nubes
+        ├── hero-scrub.mp4         2,0 MB · el que usa el sitio (keyframes densos)
+        └── hero.mp4               2,6 MB · original, queda como respaldo
 ```
 
 Las rutas del HTML son **relativas**: la misma estructura funciona igual en la
@@ -58,21 +59,46 @@ curl -sSo /dev/null -w "css: %{http_code}\n" https://prociv.co/assets/css/tailwi
 
 ---
 
-## 3. El video del hero
+## 3. El hero: el scroll hace crecer el edificio
 
-Va **incluido** en `assets/video/hero.mp4` (720p, 10 s, 2,6 MB). El HTML lo
-busca ahí primero y, como segunda opción, un `hero.mp4` en la raíz — así puedes
-cambiarlo dejando el archivo al lado del `index.html`, sin tocar código.
+`assets/video/hero-scrub.mp4` (720p, 10 s, **2,0 MB**) es el metraje del proyecto
+creciendo. **No se reproduce en bucle**: su tiempo lo manda el scroll.
 
-El video se muestra **crudo**: sin opacidad reducida y sin degradado encima. Como
-su cielo es claro (luminancia media de 103 a 160), el texto del hero se apoya en
-una losa de vidrio (`.hero-slab`), no en una capa oscura sobre la imagen. Si algún
-día lo cambias por un metraje más claro y el titular cuesta de leer, sube la
-opacidad en esa única regla:
+Antes iba con `loop`, y como el clip va de lote vacío a edificio terminado, cada
+10 s cortaba de golpe al principio. Ese era el salto. Ahora:
 
-```css
-.hero-slab { background: rgba(4, 18, 40, .62); }   /* ← sube a .72 y listo */
+- **Escenario fijo** (`.hero-stage`, 2,3 pantallas de alto) con el contenido
+  `sticky`: mientras bajas, el edificio se construye.
+- **Acercamiento en 3D**: `perspective: 1200px` en el escenario y `translateZ`
+  sobre el video — es profundidad real, no una escala plana.
+- **El cielo va aparte** (`.hero-sky`): dos capas de nubes en deriva continua a
+  distinta velocidad, enmascaradas a la franja alta. No dependen del scroll, así
+  que la escena sigue viva aunque el visitante no mueva nada.
+- **El texto sale limpio**: entero hasta el 18 % del recorrido y fuera al 45 %.
+
+### Por qué el video está reencodeado
+
+El original tenía **2 keyframes en 240 fotogramas**. Barrer con el scroll obliga
+a saltar a posiciones arbitrarias, y con keyframes tan separados el navegador
+tiene que decodificar medio clip para cada salto: ahí venían los tirones.
+`hero-scrub.mp4` lleva **49 keyframes** (uno cada 0,2 s) y encima pesa menos.
+
+Si cambias el metraje, reencódealo igual:
+
+```bash
+ffmpeg -i tu-video.mp4 -c:v libx264 -crf 23 -preset slow \
+       -g 5 -keyint_min 5 -sc_threshold 0 -an \
+       -movflags +faststart assets/video/hero-scrub.mp4
 ```
+
+Ajustes rápidos, todos en `index.html`:
+
+| Quiero… | Dónde |
+|---|---|
+| Más o menos recorrido | `.hero-stage { height: 230vh }` |
+| Acercamiento más fuerte | `const z = actual * 190;` en `heroScrollStage` |
+| Nubes más rápidas | `animation: skyDrift 96s` |
+| Texto que aguante más | `(0.45 - actual) / 0.27` |
 
 ---
 
@@ -109,7 +135,12 @@ cambias uno, cambia el otro y recompila.
 
 - Todo local salvo Google Fonts: sin CDN de Tailwind (que compilaba en el
   navegador), sin unpkg, sin cdnjs.
-- `prefers-reduced-motion` detiene la cinta, la deriva del video y las entradas.
+- `prefers-reduced-motion` detiene la cinta, las nubes y el barrido: el hero
+  muestra un fotograma fijo del proyecto terminado.
+- El bloque de JavaScript va dentro de `DOMContentLoaded`. **No lo saques de
+  ahí**: las librerías se cargan con `defer` y un script en línea corre antes que
+  ellas; sin la espera, la primera línea que use `gsap` o los iconos lanza un
+  error y se lleva por delante el scrollytelling, el simulador y el menú.
 - El contraste del hero se resolvió con la losa; el azul corporativo `#054BA6` no
   se usa como **texto** sobre negro (no llega al contraste mínimo): ahí va `#4C94E8`.
 

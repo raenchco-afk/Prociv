@@ -113,10 +113,120 @@
       .hero-slab { background: rgba(4, 18, 40, .9); }
     }
 
-    /* Deriva lentísima del fondo: el edificio "respira" sin marear.
-       Sustituye al scale-105 fijo que tenía antes. */
-    .hero-drift { transform-origin: 50% 62%; animation: heroDrift 26s ease-in-out infinite alternate; }
-    @keyframes heroDrift { from { transform: scale(1); } to { transform: scale(1.07); } }
+    /* ── ESCENARIO DEL HERO ─────────────────────────────────────────────
+       El video ya no se reproduce en bucle (el corte del loop era el salto).
+       El scroll manda el tiempo del metraje y el acercamiento en 3D; el JS
+       solo escribe --p (0 a 1) y una escala. */
+    .hero-stage { height: 230vh; }
+    @media (max-width: 767px) { .hero-stage { height: 190vh; } }
+
+    .hero-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 2.5rem;
+      /* La perspectiva es lo que convierte el zoom en un acercamiento con
+         profundidad en vez de una simple escala plana. */
+      perspective: 1200px;
+      perspective-origin: 50% 58%;
+    }
+    @media (min-width: 1024px) { .hero-sticky { padding-bottom: 3.5rem; } }
+
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-content {
+      will-change: transform, opacity;
+    }
+
+    /* ── CIELO CON VIDA PROPIA ──────────────────────────────────────────
+       No depende del scroll: aunque el visitante no mueva nada, el cielo
+       sigue corriendo. Dos capas a distinta velocidad dan profundidad.
+       Va enmascarado a la franja alta para no ensuciar el edificio. */
+    .hero-sky {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: .45;
+      -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 34%, transparent 62%);
+              mask-image: linear-gradient(180deg, #000 0%, #000 34%, transparent 62%);
+    }
+    .hero-sky::before,
+    .hero-sky::after {
+      content: '';
+      position: absolute;
+      inset: -12% -60%;
+      background-repeat: repeat-x;
+      will-change: transform;
+    }
+    .hero-sky::before {
+      background-image:
+        radial-gradient(58% 40% at 18% 42%, rgba(255,255,255,.30), transparent 70%),
+        radial-gradient(48% 34% at 52% 30%, rgba(255,255,255,.22), transparent 72%),
+        radial-gradient(64% 42% at 84% 46%, rgba(255,255,255,.26), transparent 70%);
+      background-size: 62% 100%;
+      animation: skyDrift 96s linear infinite;
+    }
+    .hero-sky::after {
+      background-image:
+        radial-gradient(52% 30% at 30% 26%, rgba(255,255,255,.16), transparent 74%),
+        radial-gradient(44% 26% at 72% 34%, rgba(255,255,255,.13), transparent 76%);
+      background-size: 44% 100%;
+      animation: skyDrift 148s linear infinite reverse;
+      opacity: .8;
+    }
+    @keyframes skyDrift {
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(-33%, 0, 0); }
+    }
+
+    /* Aviso de que el scroll es lo que hace crecer el edificio */
+    .hero-cue {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-top: 1.5rem;
+      font-size: .6875rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.72);
+      transition: opacity .4s ease;
+    }
+    .hero-cue__rail {
+      position: relative;
+      width: 4.5rem; height: 1px;
+      background: rgba(255,255,255,.28);
+      overflow: hidden;
+    }
+    .hero-cue__dot {
+      position: absolute; top: -1.5px; left: 0;
+      width: 1.25rem; height: 4px; border-radius: 2px;
+      background: #4C94E8;
+      animation: cueRun 2.6s cubic-bezier(.6,0,.4,1) infinite;
+    }
+    @keyframes cueRun {
+      0%   { transform: translateX(-100%); opacity: 0; }
+      25%  { opacity: 1; }
+      100% { transform: translateX(360%); opacity: 0; }
+    }
+    .hero-cue.is-hidden { opacity: 0; }
 
     /* Entrada de las piezas del hero */
     .reveal-up { animation: revealUp .9s cubic-bezier(.22,.61,.36,1) both; animation-delay: var(--reveal-delay, 0ms); }
@@ -130,6 +240,9 @@
 
     @media (prefers-reduced-motion: reduce) {
       .ticker__track { animation: none; }
+      .hero-sky::before, .hero-sky::after, .hero-cue__dot { animation: none; }
+      .hero-stage { height: auto; }
+      .hero-sticky { position: relative; height: 100svh; }
       * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
     }
 
@@ -207,76 +320,87 @@
   <!-- ═══════════════════════════════════════════════════════════════════
        2. HERO MONUMENTAL CON NUBES & CRECIMIENTO DEL EDIFICIO EN VIVO
        ═══════════════════════════════════════════════════════════════ -->
-  <section id="inicio" class="relative min-h-screen flex flex-col justify-end pt-28 pb-10 sm:pb-14 overflow-hidden">
+  <section id="inicio" class="hero-stage relative">
 
-    <!-- Fondo: el edificio creciendo entre nubes.
-         El video va CRUDO — sin opacidad reducida y sin degradado encima.
-         El cielo de este metraje es claro (luminancia 100-160), así que la
-         legibilidad la resuelve la losa de vidrio del contenido, no una capa
-         oscura sobre la imagen. Y el contenido va ANCLADO ABAJO para no tapar
-         el edificio, que es lo que la toma está contando. -->
-    <div class="absolute inset-0 z-0">
-      <video autoplay loop muted playsinline preload="auto"
-             class="w-full h-full object-cover hero-drift">
-        <source src="assets/video/hero.mp4" type="video/mp4">
-        <source src="hero.mp4" type="video/mp4">
-      </video>
-    </div>
+    <!-- ESCENARIO DE SCROLL.
+         El metraje es una secuencia de crecimiento, no un bucle: reproducirlo
+         en loop cortaba del edificio terminado al lote vacío cada 10 s, y ese
+         era el "salto". Ahora el tiempo del video lo manda el scroll — el
+         edificio crece mientras bajas— con un acercamiento en 3D.
+         El cielo no depende del scroll: tiene su propia deriva continua, así
+         que la escena sigue viva aunque el visitante no mueva nada. -->
+    <div class="hero-sticky">
 
-    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] gap-6 lg:gap-10 lg:items-end">
-
-        <!-- Losa de vidrio: todo el texto vive aquí -->
-        <div class="hero-slab rounded-3xl p-7 sm:p-9 lg:p-10 shadow-glass border border-white/15 reveal-up">
-
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue/25 border border-brand-blueLight/40 text-[11px] font-semibold text-white tracking-[0.14em] uppercase mb-7">
-            <span class="w-1.5 h-1.5 rounded-full bg-brand-blueLight motion-safe:animate-pulse"></span>
-            <span>Redefiniendo el hábitat urbano en Colombia</span>
-          </div>
-
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-[-0.04em] font-display text-white leading-[1.02] mb-5">
-            El futuro se construye <br class="hidden sm:inline">
-            <span class="text-gradient-blue">desde el origen.</span>
-          </h1>
-
-          <p class="text-base sm:text-lg text-gray-200 font-light leading-relaxed max-w-2xl mb-8">
-            Transformamos suelo estratégico en iconos arquitectónicos de altura. Renovación urbana
-            de vanguardia que revaloriza ciudades y maximiza tu patrimonio.
-          </p>
-
-          <div class="flex flex-col sm:flex-row gap-3.5">
-            <a href="#transformacion" class="pill-btn text-sm font-bold px-7 py-3.5 rounded-full bg-brand-blue text-white hover:bg-brand-blueDark shadow-glow-blue transition-all flex items-center justify-center gap-2.5">
-              <span>Ver cómo crece</span>
-              <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
-            </a>
-            <a href="#simulador" class="text-sm font-semibold px-7 py-3.5 rounded-full bg-white/10 border border-white/25 text-white hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2.5">
-              <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
-              <span>Simulador de ROI</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Cifras: rejilla 2×2 sobre vidrio, alineada al pie -->
-        <div class="grid grid-cols-2 gap-3 reveal-up" style="--reveal-delay:160ms">
-          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
-            <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display tabular-nums">+38%</p>
-            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Plusvalía proyectada</p>
-          </div>
-          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
-            <p class="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums">+3.500 m²</p>
-            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">En desarrollo activo</p>
-          </div>
-          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
-            <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display tabular-nums">14,5% E.A.</p>
-            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Retorno estimado</p>
-          </div>
-          <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
-            <p class="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums">100%</p>
-            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Ubicación AAA</p>
-          </div>
-        </div>
-
+      <div class="hero-media" id="heroMedia">
+        <video id="heroVideo" muted playsinline preload="auto" class="hero-video" aria-hidden="true" tabindex="-1">
+          <source src="assets/video/hero-scrub.mp4" type="video/mp4">
+          <source src="assets/video/hero.mp4" type="video/mp4">
+        </video>
       </div>
+
+      <!-- Nubes en deriva permanente, sobre la zona de cielo -->
+      <div class="hero-sky" aria-hidden="true"></div>
+
+      <div class="hero-content relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="heroContent">
+        <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] gap-6 lg:gap-10 lg:items-end">
+
+          <div class="hero-slab rounded-3xl p-7 sm:p-9 lg:p-10 shadow-glass border border-white/15 reveal-up">
+
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-blue/25 border border-brand-blueLight/40 text-[11px] font-semibold text-white tracking-[0.14em] uppercase mb-7">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-blueLight motion-safe:animate-pulse"></span>
+              <span>Redefiniendo el hábitat urbano en Colombia</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-[-0.04em] font-display text-white leading-[1.02] mb-5">
+              El futuro se construye <br class="hidden sm:inline">
+              <span class="text-gradient-blue">desde el origen.</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-gray-200 font-light leading-relaxed max-w-2xl mb-8">
+              Transformamos suelo estratégico en iconos arquitectónicos de altura. Renovación urbana
+              de vanguardia que revaloriza ciudades y maximiza tu patrimonio.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3.5">
+              <a href="#transformacion" class="pill-btn text-sm font-bold px-7 py-3.5 rounded-full bg-brand-blue text-white hover:bg-brand-blueDark shadow-glow-blue transition-all flex items-center justify-center gap-2.5">
+                <span>Ver cómo crece</span>
+                <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+              </a>
+              <a href="#simulador" class="text-sm font-semibold px-7 py-3.5 rounded-full bg-white/10 border border-white/25 text-white hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2.5">
+                <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+                <span>Simulador de ROI</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 reveal-up" style="--reveal-delay:160ms">
+            <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+              <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display tabular-nums">+38%</p>
+              <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Plusvalía proyectada</p>
+            </div>
+            <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+              <p class="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums">+3.500 m²</p>
+              <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">En desarrollo activo</p>
+            </div>
+            <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+              <p class="text-2xl sm:text-3xl font-extrabold text-brand-blueLight font-display tabular-nums">14,5% E.A.</p>
+              <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Retorno estimado</p>
+            </div>
+            <div class="apple-glass p-4 sm:p-5 rounded-2xl border border-white/12 hover:border-brand-blueLight/60 transition-colors">
+              <p class="text-2xl sm:text-3xl font-extrabold text-white font-display tabular-nums">100%</p>
+              <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider mt-1">Ubicación AAA</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Indicador: el scroll es lo que hace crecer el edificio -->
+        <div class="hero-cue" id="heroCue" aria-hidden="true">
+          <span>Desplázate para ver crecer el proyecto</span>
+          <span class="hero-cue__rail"><span class="hero-cue__dot"></span></span>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -371,6 +495,7 @@
         <div class="lg:col-span-7 relative h-[480px] sm:h-[550px] rounded-3xl overflow-hidden border border-brand-blue/30 shadow-glow-blue bg-brand-black">
           
           <video id="scrollyVideo" muted playsinline preload="auto" class="w-full h-full object-cover">
+            <source src="assets/video/hero-scrub.mp4" type="video/mp4">
             <source src="assets/video/hero.mp4" type="video/mp4">
           </video>
 
@@ -948,6 +1073,12 @@
        JAVASCRIPT LOGIC & GSAP ANIMATIONS
        ═══════════════════════════════════════════════════════════════ -->
   <script>
+  /* Las librerías (iconos, GSAP, ScrollTrigger) se cargan con `defer`, y un
+     script en línea se ejecuta ANTES que ellas. Sin esta espera, la primera
+     línea que use `lucide` o `gsap` lanza un error y se lleva por delante
+     todo lo que viene después: iconos, scrollytelling, simulador y menú.
+     `DOMContentLoaded` se dispara justo después de los `defer`. */
+  document.addEventListener('DOMContentLoaded', function () {
     // Initialize Lucide Icons
     lucide.createIcons();
 
@@ -1043,6 +1174,107 @@
     stage2.addEventListener('click', () => setStage(2));
     stage3.addEventListener('click', () => setStage(3));
 
+    /* ═══════════════════════════════════════════════════════════════════
+       HERO: el scroll conduce el crecimiento del edificio y el acercamiento.
+
+       Por qué así y no con `loop`: el metraje va de lote vacío a edificio
+       terminado. En bucle, cada 10 s cortaba de vuelta al lote — ese era el
+       salto. Aquí el tiempo del video es una función del scroll, así que no
+       hay corte posible.
+
+       Tres cuidados para que no dé tirones:
+       · Un solo rAF con interpolación (lerp): el scroll marca el destino y la
+         imagen lo persigue suavemente, en vez de saltar en cada evento.
+       · No se pide un `currentTime` nuevo mientras el video está buscando
+         (`seeking`), que es lo que provoca el atasco de peticiones.
+       · Solo se animan `transform` y `opacity`; nada que fuerce maquetación.
+       El video viene reencodeado con un keyframe cada 0,2 s (el original
+       tenía 2 en todo el clip) para que cada salto de posición sea barato.
+       ═══════════════════════════════════════════════════════════════════ */
+    (function heroScrollStage() {
+      const stage   = document.getElementById('inicio');
+      const media   = document.getElementById('heroMedia');
+      const video   = document.getElementById('heroVideo');
+      const content = document.getElementById('heroContent');
+      const cue     = document.getElementById('heroCue');
+      if (!stage || !media || !video) return;
+
+      const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Con movimiento reducido: un fotograma representativo y nada más.
+      if (sinMovimiento) {
+        video.addEventListener('loadedmetadata', function () {
+          try { video.currentTime = video.duration * 0.72; } catch (e) {}
+        });
+        if (cue) cue.classList.add('is-hidden');
+        return;
+      }
+
+      let destino = 0, actual = 0, listo = false;
+
+      // Safari (y iOS sobre todo) no decodifica hasta que el video ha
+      // arrancado una vez, aunque luego solo lo usemos para buscar posiciones.
+      function despertar() {
+        const p = video.play();
+        if (p && p.then) p.then(function () { video.pause(); }).catch(function () {});
+        else { try { video.pause(); } catch (e) {} }
+      }
+      video.addEventListener('loadeddata', function () { listo = true; despertar(); }, { once: true });
+      ['touchstart', 'click', 'keydown'].forEach(function (ev) {
+        document.addEventListener(ev, despertar, { once: true, passive: true });
+      });
+
+      function progreso() {
+        const r = stage.getBoundingClientRect();
+        const recorrido = r.height - window.innerHeight;
+        if (recorrido <= 0) return 0;
+        return Math.min(1, Math.max(0, -r.top / recorrido));
+      }
+
+      // El destino se recalcula DENTRO del bucle, no en el evento de scroll.
+      // Así la escena sigue al scroll aunque el navegador agrupe o se salte
+      // eventos, y funciona igual con rueda, barra, teclado, salto por ancla
+      // o desplazamiento suave — que son justo los casos donde el efecto se
+      // quedaba retrasado.
+      function bucle() {
+        destino = progreso();
+        if (cue) cue.classList.toggle('is-hidden', destino > 0.06);
+
+        actual += (destino - actual) * 0.14;          // persecución suave
+        if (Math.abs(destino - actual) < 0.0005) actual = destino;
+
+        // Tiempo del video = progreso del scroll
+        if (listo && video.duration && !video.seeking) {
+          const t = actual * (video.duration - 0.05);
+          if (Math.abs(video.currentTime - t) > 0.03) {
+            try { video.currentTime = t; } catch (e) {}
+          }
+        }
+
+        // Acercamiento en 3D: la cámara entra en la escena.
+        const z = actual * 190;                        // px hacia el espectador
+        const y = actual * -22;                        // leve encuadre hacia arriba
+        media.style.transform = 'translate3d(0,' + y + 'px,' + z + 'px)';
+
+        // El contenido se aparta y cede el protagonismo al edificio.
+        if (content) {
+          // El texto se retira PRONTO (queda invisible hacia el 45 % del
+          // recorrido). Si se desvanece despacio, se queda a media opacidad
+          // justo cuando el edificio ya ocupa el encuadre y se ve sucio.
+          content.style.transform = 'translate3d(0,' + (actual * -60) + 'px,0)';
+          // Nítido hasta el 18 % del recorrido y fuera del todo al 45 %:
+          // un texto a media opacidad sobre el edificio se ve sucio, así que
+          // conviene que aguante entero y luego salga rápido.
+          const op = Math.min(1, Math.max(0, (0.45 - actual) / 0.27));
+          content.style.opacity = String(op);
+          content.style.pointerEvents = actual > 0.35 ? 'none' : '';
+        }
+        requestAnimationFrame(bucle);
+      }
+
+      requestAnimationFrame(bucle);
+    })();
+
     // GSAP ScrollTrigger Integration
     gsap.registerPlugin(ScrollTrigger);
 
@@ -1077,6 +1309,7 @@
         formStatus.classList.add('hidden');
       }, 6000);
     });
+  });
   </script>
 </body>
 </html>
