@@ -1,0 +1,12 @@
+{
+  "name": "prociv-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio de PROCIV Urban Group — estático, listo para SiteGround",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "css": "tailwindcss -c build-tailwind.config.js -i build-input.css -o assets/css/tailwind.css --minify",
+    "zip": "rm -f prociv-siteground.zip && zip -q -r -X prociv-siteground.zip index.html citylive101.html robots.txt .htaccess README.md build-tailwind.config.js assets -x '*.DS_Store' && ls -lh prociv-siteground.zip"
+  },
+  "devDependencies": { "tailwindcss": "3.4.17" }
+}

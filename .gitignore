@@ -1,0 +1,8 @@
+# El ZIP de despliegue se genera, no se versiona: pesaba 45 MB repartidos
+# en siete versiones dentro del historial. Se arma con `npm run zip`.
+prociv-siteground.zip
+*.zip
+
+# Sistema y dependencias
+.DS_Store
+node_modules/
