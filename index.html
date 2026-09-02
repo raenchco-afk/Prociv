@@ -30,10 +30,10 @@
        Para regenerarlo: ver README, sección "Recompilar el CSS". -->
   <link rel="stylesheet" href="assets/css/tailwind.css">
 
-  <!-- Iconos (subconjunto propio, 3 KB) y GSAP + ScrollTrigger, todo local -->
+  <!-- Iconos (subconjunto propio) y modelo BIM. GSAP se retiró: lo usaba
+       solo el scrollytelling de video, y eran 114 KB para nada. -->
   <script src="assets/js/icons.js" defer></script>
-  <script src="assets/js/gsap.min.js" defer></script>
-  <script src="assets/js/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/bim-building.js" defer></script>
 
   <style>
     /* Custom Apple Glassmorphism and Typographic Enhancements in Corporate Blue */
@@ -431,93 +431,56 @@
 
 
   <!-- ═══════════════════════════════════════════════════════════════════
-       3. SCROLLYTELLING INTERACTIVO CON CONTROL DE VIDEO DE CRECIMIENTO
+       3. MODELO BIM · el edificio se levanta con el scroll
+       El motor está en assets/js/bim-building.js: proyección propia sobre
+       canvas, sin librerías 3D. Antes esta sección volvía a barrer el mismo
+       video del hero; ahora cuenta cómo se construye, que es otra cosa.
        ═══════════════════════════════════════════════════════════════ -->
-  <section id="transformacion" class="relative bg-brand-night py-24 sm:py-32">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Section Header -->
-      <div class="text-center mb-16">
-        <span class="text-xs font-bold tracking-widest text-brand-blueLight uppercase">Scrollytelling de Transformación</span>
-        <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-3">
-          De las nubes al <span class="text-gradient-blue">rascacielos icónico</span>.
-        </h2>
-        <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mt-4 font-light">
-          Desliza para presenciar la transformación en tiempo real con el movimiento de nubes y elevación del edificio.
-        </p>
-      </div>
+  <section id="transformacion" class="relative bg-brand-night">
+    <div id="bimStage" class="relative" style="height:320vh">
+      <div class="sticky top-0 h-screen overflow-hidden">
 
-      <!-- Scrollytelling Timeline Cards & Interactive Video Container -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        
-        <!-- Interactive Stage Cards (Left Column) -->
-        <div class="lg:col-span-5 space-y-6">
-          
-          <!-- Stage 1 -->
-          <div id="stage1-card" class="stage-card p-6 rounded-2xl apple-glass border-l-4 border-l-brand-blue transition-all duration-300 cursor-pointer hover:bg-brand-blue/10">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold text-brand-blueLight uppercase tracking-wider">Fase 01 — 0% Scroll</span>
-              <span class="text-xs text-gray-400 font-mono">Detección de Suelo</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">La Oportunidad Oculta en la Tierra</h3>
-            <p class="text-sm text-gray-400 leading-relaxed font-light">
-              Identificamos lotes estratégicos en zonas de renovación de alta demanda en Bogotá. Analizamos conectividad, plusvalía y potencial de densificación.
-            </p>
+        <!-- El lienzo ocupa TODO el escenario. Antes vivía dentro de un
+             reparto flex y se quedaba en altura 0: el modelo no se veía. -->
+        <canvas id="bimCanvas" class="absolute inset-0 w-full h-full"
+                role="img"
+                aria-label="Modelo tridimensional de CityLive101 que se construye por fases: lote, cimentación, estructura de cinco niveles, envolvente y cubierta ajardinada."></canvas>
+
+        <div class="relative z-10 h-full flex flex-col pointer-events-none">
+
+        <!-- Encabezado -->
+        <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-px bg-brand-blueLight"></span>
+            <p class="text-xs font-semibold tracking-[0.22em] uppercase text-brand-blueLight">Metodología BIM</p>
           </div>
-
-          <!-- Stage 2 -->
-          <div id="stage2-card" class="stage-card p-6 rounded-2xl apple-glass border-l-4 border-l-transparent transition-all duration-300 cursor-pointer hover:bg-brand-blue/10 opacity-70">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold text-brand-blueLight uppercase tracking-wider">Fase 02 — 50% Scroll</span>
-              <span class="text-xs text-gray-400 font-mono">Ingeniería &amp; Altura</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">Ingeniería, Altura y Nubes en Movimiento</h3>
-            <p class="text-sm text-gray-400 leading-relaxed font-light">
-              Despliegue de tecnología constructiva avanzada, estructuras sismorresistentes elevándose entre el horizonte y las nubes.
-            </p>
-          </div>
-
-          <!-- Stage 3 -->
-          <div id="stage3-card" class="stage-card p-6 rounded-2xl apple-glass border-l-4 border-l-transparent transition-all duration-300 cursor-pointer hover:bg-brand-blue/10 opacity-70">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold text-brand-blueLight uppercase tracking-wider">Fase 03 — 100% Scroll</span>
-              <span class="text-xs text-gray-400 font-mono">Entrega &amp; Valor</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-2">Un Nuevo Ícono Inmobiliario</h3>
-            <p class="text-sm text-gray-400 leading-relaxed font-light">
-              Edificio finalizado integrado a la vida metropolitana. Máxima plusvalía para los inversionistas visionarios que ingresaron en fase cero.
-            </p>
-          </div>
-
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] font-display text-white leading-[1.05] max-w-3xl">
+            Del lote al edificio, <span class="text-gradient-blue">modelado antes de construir.</span>
+          </h2>
         </div>
 
-        <!-- Scrollytelling Visual Video Canvas Container (Right Column) -->
-        <div class="lg:col-span-7 relative h-[480px] sm:h-[550px] rounded-3xl overflow-hidden border border-brand-blue/30 shadow-glow-blue bg-brand-black">
-          
-          <video id="scrollyVideo" muted playsinline preload="auto" class="w-full h-full object-cover">
-            <source src="assets/video/hero-scrub.mp4" type="video/mp4">
-            <source src="assets/video/hero.mp4" type="video/mp4">
-          </video>
+        <div class="flex-1"></div>
 
-          <!-- Overlay Gradient & Dynamic Caption -->
-          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/30 pointer-events-none"></div>
-
-          <div class="absolute bottom-8 left-8 right-8 p-6 apple-glass rounded-2xl border border-brand-blue/30">
-            <div class="flex items-center gap-3 mb-2">
-              <span id="scrollyStageBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-brand-blue/20 text-brand-blueLight border border-brand-blue/40">
-                FASE 1: LOTE Y DIAGNÓSTICO
-              </span>
-              <span class="text-xs text-gray-400 font-mono">Video Render en Movimiento</span>
+        <!-- Rótulo de fase y avance de obra -->
+        <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-10 sm:pb-14">
+          <div class="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p id="bimFase" class="text-xs font-bold tracking-[0.28em] text-brand-blueLight uppercase tabular-nums">LOTE</p>
+              <p id="bimFaseTexto" class="text-lg sm:text-xl text-white font-light mt-1.5">Implantación · 216 m² de lote</p>
             </div>
-            <p id="scrollyStageDesc" class="text-sm sm:text-base font-medium text-white">
-              Análisis geoespacial y adquisición estratégica de suelo de alto potencial de renovación urbana.
-            </p>
+            <dl class="hidden sm:grid grid-cols-3 gap-x-10 gap-y-1 text-right">
+              <div><dt class="text-[10px] uppercase tracking-wider text-gray-400">Niveles</dt><dd class="text-lg font-bold text-white tabular-nums">5</dd></div>
+              <div><dt class="text-[10px] uppercase tracking-wider text-gray-400">Altura</dt><dd class="text-lg font-bold text-white tabular-nums">13,50 m</dd></div>
+              <div><dt class="text-[10px] uppercase tracking-wider text-gray-400">Entre ejes</dt><dd class="text-lg font-bold text-white tabular-nums">4,00 m</dd></div>
+            </dl>
           </div>
-
+          <div class="mt-5 h-px w-full bg-white/12 overflow-hidden">
+            <div id="bimBarra" class="h-full bg-brand-blueLight origin-left" style="transform:scaleX(0)"></div>
+          </div>
         </div>
 
+        </div>
       </div>
-
     </div>
   </section>
 
@@ -1073,7 +1036,7 @@
        JAVASCRIPT LOGIC & GSAP ANIMATIONS
        ═══════════════════════════════════════════════════════════════ -->
   <script>
-  /* Las librerías (iconos, GSAP, ScrollTrigger) se cargan con `defer`, y un
+  /* Las librerías (iconos, modelo BIM) se cargan con `defer`, y un
      script en línea se ejecuta ANTES que ellas. Sin esta espera, la primera
      línea que use `lucide` o `gsap` lanza un error y se lleva por delante
      todo lo que viene después: iconos, scrollytelling, simulador y menú.
@@ -1132,170 +1095,10 @@
     modelSelect.addEventListener('change', calculateROI);
     calculateROI();
 
-    // Scrollytelling Video Scrubbing & Stage Controls
-    const scrollyVideo = document.getElementById('scrollyVideo');
-    const stage1 = document.getElementById('stage1-card');
-    const stage2 = document.getElementById('stage2-card');
-    const stage3 = document.getElementById('stage3-card');
-
-    const scrollyStageBadge = document.getElementById('scrollyStageBadge');
-    const scrollyStageDesc = document.getElementById('scrollyStageDesc');
-
-    function setStage(stageNum) {
-      [stage1, stage2, stage3].forEach((stg, idx) => {
-        if (idx === stageNum - 1) {
-          stg.classList.add('border-l-brand-blue', 'opacity-100');
-          stg.classList.remove('border-l-transparent', 'opacity-70');
-        } else {
-          stg.classList.remove('border-l-brand-blue', 'opacity-100');
-          stg.classList.add('border-l-transparent', 'opacity-70');
-        }
-      });
-
-      if (stageNum === 1) {
-        scrollyStageBadge.textContent = "FASE 1: DETECCIÓN DE SUELO Y LOTE";
-        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-brand-blue/20 text-brand-blueLight border border-brand-blue/40";
-        scrollyStageDesc.textContent = "Análisis geoespacial y adquisición estratégica de suelo de alto potencial de renovación urbana.";
-        if(scrollyVideo && scrollyVideo.duration) scrollyVideo.currentTime = 0;
-      } else if (stageNum === 2) {
-        scrollyStageBadge.textContent = "FASE 2: ELEVACIÓN DE EDIFICIO Y NUBES";
-        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-brand-blue/20 text-brand-blueLight border border-brand-blue/40";
-        scrollyStageDesc.textContent = "Despliegue de estructura de vanguardia sismorresistente entre nubes en movimiento y la silueta metropolitana.";
-        if(scrollyVideo && scrollyVideo.duration) scrollyVideo.currentTime = scrollyVideo.duration * 0.45;
-      } else if (stageNum === 3) {
-        scrollyStageBadge.textContent = "FASE 3: ENTREGA Y MÁXIMA PLUSVALÍA";
-        scrollyStageBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-brand-blue/30 text-white border border-brand-blueLight/50";
-        scrollyStageDesc.textContent = "Edificio icónico finalizado, vida metropolitana integrada y consolidación de retorno para inversionistas.";
-        if(scrollyVideo && scrollyVideo.duration) scrollyVideo.currentTime = scrollyVideo.duration * 0.9;
-      }
-    }
-
-    stage1.addEventListener('click', () => setStage(1));
-    stage2.addEventListener('click', () => setStage(2));
-    stage3.addEventListener('click', () => setStage(3));
-
-    /* ═══════════════════════════════════════════════════════════════════
-       HERO: el scroll conduce el crecimiento del edificio y el acercamiento.
-
-       Por qué así y no con `loop`: el metraje va de lote vacío a edificio
-       terminado. En bucle, cada 10 s cortaba de vuelta al lote — ese era el
-       salto. Aquí el tiempo del video es una función del scroll, así que no
-       hay corte posible.
-
-       Tres cuidados para que no dé tirones:
-       · Un solo rAF con interpolación (lerp): el scroll marca el destino y la
-         imagen lo persigue suavemente, en vez de saltar en cada evento.
-       · No se pide un `currentTime` nuevo mientras el video está buscando
-         (`seeking`), que es lo que provoca el atasco de peticiones.
-       · Solo se animan `transform` y `opacity`; nada que fuerce maquetación.
-       El video viene reencodeado con un keyframe cada 0,2 s (el original
-       tenía 2 en todo el clip) para que cada salto de posición sea barato.
-       ═══════════════════════════════════════════════════════════════════ */
-    (function heroScrollStage() {
-      const stage   = document.getElementById('inicio');
-      const media   = document.getElementById('heroMedia');
-      const video   = document.getElementById('heroVideo');
-      const content = document.getElementById('heroContent');
-      const cue     = document.getElementById('heroCue');
-      if (!stage || !media || !video) return;
-
-      const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // Con movimiento reducido: un fotograma representativo y nada más.
-      if (sinMovimiento) {
-        video.addEventListener('loadedmetadata', function () {
-          try { video.currentTime = video.duration * 0.72; } catch (e) {}
-        });
-        if (cue) cue.classList.add('is-hidden');
-        return;
-      }
-
-      let destino = 0, actual = 0, listo = false;
-
-      // Safari (y iOS sobre todo) no decodifica hasta que el video ha
-      // arrancado una vez, aunque luego solo lo usemos para buscar posiciones.
-      function despertar() {
-        const p = video.play();
-        if (p && p.then) p.then(function () { video.pause(); }).catch(function () {});
-        else { try { video.pause(); } catch (e) {} }
-      }
-      video.addEventListener('loadeddata', function () { listo = true; despertar(); }, { once: true });
-      ['touchstart', 'click', 'keydown'].forEach(function (ev) {
-        document.addEventListener(ev, despertar, { once: true, passive: true });
-      });
-
-      function progreso() {
-        const r = stage.getBoundingClientRect();
-        const recorrido = r.height - window.innerHeight;
-        if (recorrido <= 0) return 0;
-        return Math.min(1, Math.max(0, -r.top / recorrido));
-      }
-
-      // El destino se recalcula DENTRO del bucle, no en el evento de scroll.
-      // Así la escena sigue al scroll aunque el navegador agrupe o se salte
-      // eventos, y funciona igual con rueda, barra, teclado, salto por ancla
-      // o desplazamiento suave — que son justo los casos donde el efecto se
-      // quedaba retrasado.
-      function bucle() {
-        destino = progreso();
-        if (cue) cue.classList.toggle('is-hidden', destino > 0.06);
-
-        actual += (destino - actual) * 0.14;          // persecución suave
-        if (Math.abs(destino - actual) < 0.0005) actual = destino;
-
-        // Tiempo del video = progreso del scroll
-        if (listo && video.duration && !video.seeking) {
-          const t = actual * (video.duration - 0.05);
-          if (Math.abs(video.currentTime - t) > 0.03) {
-            try { video.currentTime = t; } catch (e) {}
-          }
-        }
-
-        // Acercamiento en 3D: la cámara entra en la escena.
-        const z = actual * 190;                        // px hacia el espectador
-        const y = actual * -22;                        // leve encuadre hacia arriba
-        media.style.transform = 'translate3d(0,' + y + 'px,' + z + 'px)';
-
-        // El contenido se aparta y cede el protagonismo al edificio.
-        if (content) {
-          // El texto se retira PRONTO (queda invisible hacia el 45 % del
-          // recorrido). Si se desvanece despacio, se queda a media opacidad
-          // justo cuando el edificio ya ocupa el encuadre y se ve sucio.
-          content.style.transform = 'translate3d(0,' + (actual * -60) + 'px,0)';
-          // Nítido hasta el 18 % del recorrido y fuera del todo al 45 %:
-          // un texto a media opacidad sobre el edificio se ve sucio, así que
-          // conviene que aguante entero y luego salga rápido.
-          const op = Math.min(1, Math.max(0, (0.45 - actual) / 0.27));
-          content.style.opacity = String(op);
-          content.style.pointerEvents = actual > 0.35 ? 'none' : '';
-        }
-        requestAnimationFrame(bucle);
-      }
-
-      requestAnimationFrame(bucle);
-    })();
-
-    // GSAP ScrollTrigger Integration
-    gsap.registerPlugin(ScrollTrigger);
-
-    ScrollTrigger.create({
-      trigger: "#transformacion",
-      start: "top 60%",
-      end: "bottom 40%",
-      onUpdate: (self) => {
-        const progress = self.progress;
-        if (scrollyVideo && scrollyVideo.duration) {
-          scrollyVideo.currentTime = scrollyVideo.duration * progress;
-        }
-        if (progress < 0.33) {
-          setStage(1);
-        } else if (progress < 0.66) {
-          setStage(2);
-        } else {
-          setStage(3);
-        }
-      }
-    });
+    /* El scrollytelling de video se retiró: repetía el mismo metraje del hero.
+       Su sección la ocupa ahora el modelo BIM (assets/js/bim-building.js), que
+       lleva su propio bucle y no necesita GSAP. Las librerías se conservan
+       porque el resto de la página las usa. */
 
     // Form Submission Handling
     const leadForm = document.getElementById('leadForm');

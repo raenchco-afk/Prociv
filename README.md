@@ -21,8 +21,7 @@ public_html/                       ← raíz de tu dominio
     │   └── styles.css             hoja de la versión anterior (sin usar hoy)
     ├── js/
     │   ├── icons.js               10 iconos propios · 3 KB
-    │   ├── gsap.min.js            animación del scrollytelling
-    │   ├── ScrollTrigger.min.js
+    │   ├── bim-building.js        modelo BIM del edificio · 17 KB, sin librerías
     │   ├── citylive.js
     │   └── main.js                script de la versión anterior (sin usar hoy)
     ├── img/
@@ -99,6 +98,43 @@ Ajustes rápidos, todos en `index.html`:
 | Acercamiento más fuerte | `const z = actual * 190;` en `heroScrollStage` |
 | Nubes más rápidas | `animation: skyDrift 96s` |
 | Texto que aguante más | `(0.45 - actual) / 0.27` |
+
+---
+
+## 3.bis. El modelo BIM que se construye con el scroll
+
+`assets/js/bim-building.js` dibuja en canvas un modelo tridimensional en líneas
+—lenguaje de plano— que se levanta por fases: lote, cimentación, estructura
+nivel a nivel, envolvente y cubierta. Sustituyó al scrollytelling anterior, que
+volvía a barrer el mismo video del hero.
+
+- **Sin librerías 3D.** La proyección en perspectiva es propia (unas 40 líneas).
+  Traer Three.js habrían sido ~600 KB para dibujar aristas. De paso salió GSAP,
+  que solo usaba el scrollytelling: 114 KB menos.
+- **La cámara cuenta la obra**: arranca casi en planta —como se lee una
+  implantación— y baja a nivel de calle mientras el edificio sube.
+- **Atenuación por profundidad**: lo cercano va nítido, lo lejano se apaga. Sin
+  eso el modelo se lee como una maraña de alambre en vez de un plano.
+- **Encuadre automático**: se proyectan las ocho esquinas de lo ya construido y
+  la escala se ajusta a lo que ocupan. Por eso nunca se sale del lienzo, en
+  ninguna pantalla.
+- **Cotas de nivel, cota de altura, escala gráfica, norte y llamados de
+  elemento**: es lo que lo hace leer como documentación técnica y no como
+  adorno. Las cotas se colocan fuera de la silueta proyectada, así que no se
+  montan encima del edificio al girar la cámara.
+
+Qué tocar (todo en `bim-building.js`):
+
+| Quiero… | Dónde |
+|---|---|
+| Otro número de pisos o luces | `ANCHO`, `FONDO`, `ALTURA_PISO`, `PISOS`, `EJES_X`, `EJES_Z` |
+| Cambiar el orden de montaje | los `tramo(p, desde, hasta)` dentro de `dibujar` |
+| Otros textos de fase | `FASES` |
+| Otros llamados de elemento | `LLAMADOS` |
+| Recorrido más largo o corto | `height:320vh` del `#bimStage` en `index.html` |
+
+⚠️ El lienzo va en `absolute inset-0` dentro del escenario, **no** dentro de un
+reparto flex: ahí se quedaba en altura 0 y el modelo no se veía.
 
 ---
 
