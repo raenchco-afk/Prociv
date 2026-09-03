@@ -21,7 +21,11 @@ public_html/                       ← raíz de tu dominio
     │   └── styles.css             hoja de la versión anterior (sin usar hoy)
     ├── js/
     │   ├── icons.js               10 iconos propios · 3 KB
-    │   ├── bim-building.js        modelo BIM del edificio · 17 KB, sin librerías
+    │   ├── prociv-3d.js           motor de proyección compartido
+    │   ├── bim-building.js        modelo BIM del edificio · sin librerías
+    │   ├── bim-amenidades.js      corte interactivo por niveles
+    │   ├── roi-grafica.js         gráfica del simulador de inversión
+    │   ├── galeria.js             galería del proyecto
     │   ├── citylive.js
     │   └── main.js                script de la versión anterior (sin usar hoy)
     ├── img/
@@ -135,6 +139,30 @@ Qué tocar (todo en `bim-building.js`):
 
 ⚠️ El lienzo va en `absolute inset-0` dentro del escenario, **no** dentro de un
 reparto flex: ahí se quedaba en altura 0 y el modelo no se veía.
+
+---
+
+## 3.ter. Las otras tres piezas interactivas
+
+Todas comparten `assets/js/prociv-3d.js` (cámara, encuadre automático y
+atenuación por profundidad). Ninguna carga una librería externa.
+
+**Amenidades por nivel** (`bim-amenidades.js`). Un listado no dice dónde están
+las cosas. Al elegir una amenidad, el modelo enciende **ese** nivel, apaga los
+demás y gira para mostrarlo. La geometría es la misma del modelo BIM, cortada
+por plantas. Para añadir o mover una amenidad basta editar su bloque en el HTML:
+`data-nivel` (0 = primer piso), `data-titulo`, `data-texto`, `data-dato` y
+`data-rotulo`.
+
+**Gráfica del simulador** (`roi-grafica.js`). El simulador daba tres cifras;
+tres cifras no dejan ver la forma de la inversión. Ahora se dibujan capital,
+valorización y renta acumulada año a año, con la línea del capital aportado como
+umbral. **Usa la misma fórmula que las cifras** —una sola verdad—: si cambias la
+tasa, cámbiala en `calculateROI` dentro de `index.html` y la gráfica sigue.
+
+**Galería del proyecto** (`galeria.js`). Los diez renders con su pie. Antes esa
+columna repetía por tercera vez el mismo video del hero. Para cambiar imágenes o
+pies, edita el arreglo `IMAGENES` al inicio del archivo.
 
 ---
 

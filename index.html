@@ -33,7 +33,11 @@
   <!-- Iconos (subconjunto propio) y modelo BIM. GSAP se retiró: lo usaba
        solo el scrollytelling de video, y eran 114 KB para nada. -->
   <script src="assets/js/icons.js" defer></script>
+  <script src="assets/js/prociv-3d.js" defer></script>
   <script src="assets/js/bim-building.js" defer></script>
+  <script src="assets/js/bim-amenidades.js" defer></script>
+  <script src="assets/js/roi-grafica.js" defer></script>
+  <script src="assets/js/galeria.js" defer></script>
 
   <style>
     /* Custom Apple Glassmorphism and Typographic Enhancements in Corporate Blue */
@@ -246,6 +250,25 @@
       * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
     }
 
+    /* Selector de amenidades: la opción activa se marca con un filete azul
+       que entra desde la izquierda, no con un cambio de fondo. */
+    .amen-op { position: relative; padding-left: 1rem; transition: color .3s ease; }
+    .amen-op::before {
+      content: ''; position: absolute; left: 0; top: 12%; bottom: 12%;
+      width: 2px; background: #4C94E8; transform: scaleY(0); transform-origin: top;
+      transition: transform .35s cubic-bezier(.22,.61,.36,1);
+    }
+    .amen-op.is-activa::before { transform: scaleY(1); }
+    .amen-op.is-activa { background: rgba(5,75,166,.10); }
+    .amen-op:hover { background: rgba(5,75,166,.07); }
+    .amen-op:focus-visible { outline: 2px solid #4C94E8; outline-offset: -2px; }
+
+    /* Miniaturas de la galería */
+    .galeria-min { opacity: .55; transition: opacity .25s ease, border-color .25s ease, transform .25s ease; }
+    .galeria-min:hover { opacity: .9; }
+    .galeria-min.is-activa { opacity: 1; border-color: #4C94E8; transform: translateY(-2px); }
+    .galeria-min:focus-visible { outline: 2px solid #4C94E8; outline-offset: 2px; }
+
     /* Hide scrollbar */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -273,12 +296,12 @@
         <!-- Navigation Links (Desktop) -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
           <a href="#vision" class="hover:text-white transition-colors">Visión</a>
-          <a href="#transformacion" class="hover:text-brand-blueLight transition-colors">Scrollytelling</a>
+          <a href="#transformacion" class="hover:text-brand-blueLight transition-colors">Metodología BIM</a>
           <a href="#metodo" class="hover:text-white transition-colors">Método</a>
           <a href="#bento" class="hover:text-white transition-colors">Amenidades</a>
           <a href="#simulador" class="hover:text-brand-blueLight transition-colors">Simulador ROI</a>
           <a href="#proyectos" class="hover:text-white transition-colors">Proyectos</a>
-          <a href="#contacto" class="hover:text-white transition-colors">Contacto VIP</a>
+          <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
         </nav>
 
         <!-- CTA Action Buttons -->
@@ -611,92 +634,95 @@
   <!-- ═══════════════════════════════════════════════════════════════════
        5. BENTO GRID DE ARQUITECTURA & AMENIDADES (ESTILO APPLE)
        ═══════════════════════════════════════════════════════════════ -->
-  <section id="bento" class="bg-brand-dark py-24 sm:py-32">
+  <section id="bento" class="bg-brand-dark py-24 sm:py-32 border-y border-brand-blue/15">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <span class="text-xs font-bold tracking-widest text-brand-blueLight uppercase">Bento Grid de Innovación</span>
-        <h2 class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-3">
-          Diseñado para una nueva <span class="text-gradient-blue">forma de vivir</span>.
-        </h2>
-        <p class="text-gray-400 text-base sm:text-lg font-light mt-4">
-          Un ecosistema completo donde el trabajo, la salud y el entretenimiento convergen sin salir de tu edificio.
-        </p>
+
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-px bg-brand-blueLight"></span>
+        <p class="text-xs font-semibold tracking-[0.22em] uppercase text-brand-blueLight">Amenidades por nivel</p>
       </div>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] font-display text-white leading-[1.05] max-w-3xl mb-4">
+        Tu casa no termina <span class="text-gradient-blue">en la puerta.</span>
+      </h2>
+      <p class="text-base text-gray-300 font-light max-w-2xl mb-12">
+        Un listado de amenidades no dice dónde están. Elige una y el modelo te muestra
+        en qué nivel del edificio vive.
+      </p>
 
-      <!-- Bento Grid 5-Card Layout -->
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        
-        <!-- Bento 1: Large Featured Card (2x2) -->
-        <div class="md:col-span-2 lg:col-span-2 md:row-span-2 apple-glass p-8 sm:p-10 rounded-3xl border border-brand-blue/20 flex flex-col justify-between relative overflow-hidden group hover:border-brand-blueLight transition-all">
-          <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-blue/20 rounded-full blur-3xl group-hover:bg-brand-blue/30 transition-all"></div>
-          <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blueLight text-xs font-bold mb-6">
-              <i data-lucide="wifi" class="w-3.5 h-3.5"></i>
-              <span>Work &amp; Create</span>
-            </div>
-            <h3 class="text-3xl font-extrabold text-white mb-4">Creative Lounge &amp; Podcast Studio</h3>
-            <p class="text-gray-400 text-sm sm:text-base font-light leading-relaxed mb-6">
-              Coworking pro hiperconectado con internet redundante de fibra óptica, cabinas insonorizadas para llamadas ejecutivas y estudio equipado para creación de contenido.
-            </p>
-          </div>
-          <div class="space-y-3 pt-6 border-t border-white/10">
-            <div class="flex items-center justify-between text-xs text-gray-300">
-              <span>Conexión Fibra Óptica</span>
-              <span class="font-mono text-brand-blueLight">1 Gbps Simétrico</span>
-            </div>
-            <div class="flex items-center justify-between text-xs text-gray-300">
-              <span>Cabinas Privadas QuietZone</span>
-              <span class="font-mono text-brand-blueLight">100% Insonorizadas</span>
-            </div>
-          </div>
+      <div class="grid lg:grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-8 lg:gap-12 items-start">
+
+        <!-- Selector de niveles -->
+        <div id="amenLista" role="listbox" aria-label="Amenidades por nivel" class="divide-y divide-white/10 border-y border-white/10">
+
+          <button type="button" role="option" data-nivel="5" data-rotulo="Cubierta · N+13.50"
+                  data-titulo="Terraza BBQ y firepit"
+                  data-texto="Cocina abierta, zonas de asado y fogata bajo el cielo de Bogotá. La cubierta ajardinada aísla el último piso y baja la temperatura del edificio."
+                  data-dato="360° sobre Santa Rosa Morato"
+                  class="amen-op w-full text-left py-5 flex items-baseline gap-5 group">
+            <span class="text-[11px] font-mono text-brand-blueLight tabular-nums w-16 shrink-0">N+13.50</span>
+            <span class="flex-1">
+              <span class="block text-lg sm:text-xl font-semibold text-white">Terraza BBQ y firepit</span>
+              <span class="block text-sm text-gray-400 mt-0.5">Cubierta ajardinada</span>
+            </span>
+            <i data-lucide="flame" class="w-4 h-4 text-brand-blueLight opacity-0 group-[.is-activa]:opacity-100 transition-opacity"></i>
+          </button>
+
+          <button type="button" role="option" data-nivel="4" data-rotulo="Nivel 5 · N+10.80"
+                  data-titulo="Sky Gym"
+                  data-texto="Gimnasio equipado y zona de calistenia con ventanal continuo hacia los cerros. Entrenar sin salir ni pagar mensualidad aparte."
+                  data-dato="Equipamiento de alto rendimiento"
+                  class="amen-op w-full text-left py-5 flex items-baseline gap-5 group">
+            <span class="text-[11px] font-mono text-brand-blueLight tabular-nums w-16 shrink-0">N+10.80</span>
+            <span class="flex-1">
+              <span class="block text-lg sm:text-xl font-semibold text-white">Sky Gym</span>
+              <span class="block text-sm text-gray-400 mt-0.5">Wellness y calistenia</span>
+            </span>
+            <i data-lucide="dumbbell" class="w-4 h-4 text-brand-blueLight opacity-0 group-[.is-activa]:opacity-100 transition-opacity"></i>
+          </button>
+
+          <button type="button" role="option" data-nivel="1" data-rotulo="Nivel 2 · N+2.70"
+                  data-titulo="Creative Lounge y coworking"
+                  data-texto="Puestos de trabajo, cabinas insonorizadas para llamadas y sala de podcast. Fibra óptica redundante: si se cae un proveedor, entra el otro."
+                  data-dato="1 Gbps simétrico · cabinas QuietZone"
+                  class="amen-op w-full text-left py-5 flex items-baseline gap-5 group">
+            <span class="text-[11px] font-mono text-brand-blueLight tabular-nums w-16 shrink-0">N+2.70</span>
+            <span class="flex-1">
+              <span class="block text-lg sm:text-xl font-semibold text-white">Creative Lounge y coworking</span>
+              <span class="block text-sm text-gray-400 mt-0.5">Trabajo remoto sin salir</span>
+            </span>
+            <i data-lucide="wifi" class="w-4 h-4 text-brand-blueLight opacity-0 group-[.is-activa]:opacity-100 transition-opacity"></i>
+          </button>
+
+          <button type="button" role="option" data-nivel="0" data-rotulo="Primer piso · N+0.00"
+                  data-titulo="Acceso, bicicleteros y domótica"
+                  data-texto="Entrada con control biométrico, depósito de bicicletas a nivel de calle y control de accesos desde el celular para residentes y visitantes."
+                  data-dato="−30 % de consumo energético"
+                  class="amen-op w-full text-left py-5 flex items-baseline gap-5 group">
+            <span class="text-[11px] font-mono text-brand-blueLight tabular-nums w-16 shrink-0">N+0.00</span>
+            <span class="flex-1">
+              <span class="block text-lg sm:text-xl font-semibold text-white">Acceso, bicicleteros y domótica</span>
+              <span class="block text-sm text-gray-400 mt-0.5">Llegar y entrar</span>
+            </span>
+            <i data-lucide="shield-check" class="w-4 h-4 text-brand-blueLight opacity-0 group-[.is-activa]:opacity-100 transition-opacity"></i>
+          </button>
+
         </div>
 
-        <!-- Bento 2: Sky Gym (1x1) -->
-        <div class="apple-glass p-8 rounded-3xl border border-brand-blue/20 hover:border-brand-blueLight transition-all flex flex-col justify-between group">
-          <div>
-            <div class="w-10 h-10 rounded-xl bg-brand-blue/20 text-brand-blueLight flex items-center justify-center mb-6">
-              <i data-lucide="dumbbell" class="w-5 h-5"></i>
+        <!-- El edificio responde -->
+        <div class="relative">
+          <div class="apple-glass rounded-3xl border border-white/12 overflow-hidden">
+            <canvas id="amenCanvas" class="w-full block" style="height:clamp(320px,52vh,520px)"
+                    role="img" aria-label="Corte del edificio que resalta el nivel de la amenidad seleccionada."></canvas>
+            <div id="amenDetalle" class="border-t border-white/10 p-6 sm:p-7">
+              <p data-campo="nivel" class="text-[11px] font-mono tracking-[0.18em] uppercase text-brand-blueLight mb-2">Cubierta · N+13.50</p>
+              <p data-campo="titulo" class="text-xl sm:text-2xl font-bold text-white mb-2">Terraza BBQ y firepit</p>
+              <p data-campo="texto" class="text-sm text-gray-300 font-light leading-relaxed mb-4">Cocina abierta, zonas de asado y fogata bajo el cielo de Bogotá.</p>
+              <p data-campo="dato" class="text-xs font-mono text-brand-blueLight">360° sobre Santa Rosa Morato</p>
             </div>
-            <h4 class="text-xl font-bold text-white mb-2">Sky Gym &amp; Wellness</h4>
-            <p class="text-xs text-gray-400 font-light leading-relaxed">
-              Equipamiento de alto rendimiento, zona de calistenia y vista panorámica sobre la ciudad.
-            </p>
-          </div>
-          <span class="text-[11px] text-brand-blueLight font-semibold uppercase tracking-wider mt-4">Nivel Rooftop</span>
-        </div>
-
-        <!-- Bento 3: Rooftop BBQ (1x1) -->
-        <div class="apple-glass p-8 rounded-3xl border border-brand-blue/20 hover:border-brand-blueLight transition-all flex flex-col justify-between group">
-          <div>
-            <div class="w-10 h-10 rounded-xl bg-brand-blue/20 text-brand-blueLight flex items-center justify-center mb-6">
-              <i data-lucide="flame" class="w-5 h-5"></i>
-            </div>
-            <h4 class="text-xl font-bold text-white mb-2">Firepit &amp; Social Lounge</h4>
-            <p class="text-xs text-gray-400 font-light leading-relaxed">
-              Terrazas panorámicas con zonas BBQ de autor y chimeneas para eventos privados.
-            </p>
-          </div>
-          <span class="text-[11px] text-brand-blueLight font-semibold uppercase tracking-wider mt-4">Vista 360°</span>
-        </div>
-
-        <!-- Bento 4: Domótica & Eficiencia (2x1 Wide) -->
-        <div class="md:col-span-2 lg:col-span-2 apple-glass p-8 rounded-3xl border border-brand-blue/20 hover:border-brand-blueLight transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
-          <div class="space-y-2">
-            <span class="text-xs font-bold text-brand-blueLight uppercase">Tecnología Inteligente</span>
-            <h4 class="text-2xl font-bold text-white">Domótica Integral &amp; Accesos Smart</h4>
-            <p class="text-xs text-gray-400 font-light max-w-md">
-              Cerraduras biométricas, control de iluminación por app y optimización energética automatizada en todas las tipologías.
-            </p>
-          </div>
-          <div class="shrink-0 px-4 py-3 rounded-2xl bg-brand-blue/20 border border-brand-blue/40 text-center">
-            <span class="block text-xl font-bold text-brand-blueLight font-display">-30%</span>
-            <span class="text-[10px] text-gray-300 uppercase">Consumo Energético</span>
           </div>
         </div>
 
       </div>
-
     </div>
   </section>
 
@@ -784,6 +810,20 @@
               </select>
             </div>
 
+            <!-- La forma de la inversión, no solo su resultado -->
+            <div class="mb-6">
+              <div class="flex items-center justify-between mb-2">
+                <p class="text-[11px] font-mono tracking-[0.16em] uppercase text-brand-blueLight">Proyección año a año</p>
+                <div class="flex items-center gap-4 text-[10px] text-gray-400">
+                  <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm" style="background:rgba(5,75,166,.75)"></i>Capital</span>
+                  <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm" style="background:rgba(5,75,166,.42)"></i>Valorización</span>
+                  <span class="flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-sm" style="background:rgba(76,148,232,.28)"></i>Renta</span>
+                </div>
+              </div>
+              <canvas id="roiCanvas" class="w-full block rounded-xl" style="height:210px"
+                      role="img" aria-label="Gráfica de la proyección: capital aportado, valorización y renta acumulada año a año."></canvas>
+            </div>
+
             <!-- Dynamic Outputs -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/10">
               <div class="p-4 rounded-2xl bg-brand-blue/10 border border-brand-blue/20 text-center">
@@ -837,20 +877,27 @@
       <!-- Featured Card: CityLive101 with Dynamic Video Background -->
       <div class="apple-glass rounded-3xl border border-brand-blue/30 overflow-hidden grid grid-cols-1 lg:grid-cols-12 hover:border-brand-blueLight transition-all group shadow-glow-blue">
         
-        <!-- Video Canvas Column (Replaced static image with dynamic cloud/city video loop) -->
-        <div class="lg:col-span-7 relative min-h-[380px] overflow-hidden bg-brand-black">
-          <video autoplay loop muted playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 opacity-90">
-            <source src="assets/video/hero.mp4" type="video/mp4">
-          </video>
-          
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+        <!-- Galería real del proyecto. Antes esta columna repetía por tercera
+             vez el mismo video del hero; hay diez renders del edificio sin
+             usar y son mejor argumento que un bucle repetido. -->
+        <div class="lg:col-span-7 relative min-h-[380px] lg:min-h-[520px] overflow-hidden bg-brand-black" id="galeria">
+
+          <img id="galeriaImg" src="assets/img/citylive/fachada-principal.jpg"
+               alt="Fachada principal de CityLive101 sobre la Calle 101"
+               class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500">
+
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/40 pointer-events-none"></div>
+
           <div class="absolute top-6 left-6 flex flex-wrap items-center gap-2">
-            <span class="px-3 py-1 rounded-full bg-brand-blue text-white text-xs font-extrabold uppercase shadow-glow-blue">
-              En Desarrollo Activo
-            </span>
-            <span class="px-3 py-1 rounded-full apple-glass text-white text-xs font-medium border border-brand-blue/30">
-              Bogotá — Calle 101 #70G-55
-            </span>
+            <span class="px-3 py-1 rounded-full bg-brand-blue text-white text-[11px] font-bold uppercase tracking-wider">En desarrollo</span>
+            <span class="px-3 py-1 rounded-full apple-glass text-white text-[11px] font-medium border border-white/20">Calle 101 #70G-55 · Santa Rosa Morato</span>
+          </div>
+
+          <!-- Pie de foto y miniaturas -->
+          <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+            <p id="galeriaPie" class="text-sm text-white font-medium mb-3 drop-shadow">Fachada principal · ladrillo a la vista y ventanales</p>
+            <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="galeriaTiras" role="tablist" aria-label="Imágenes del proyecto">
+            </div>
           </div>
         </div>
 
@@ -861,13 +908,25 @@
               Vive la ciudad a tu manera. Apartaestudios Unique y Duo con balcones, mezzanines, coworking integral y rooftop BBQ a pasos de la Calle 100 y la Av. Suba.
             </p>
             
-            <dl class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/10 text-xs">
+            <dl class="grid grid-cols-2 gap-x-4 gap-y-5 mt-6 pt-6 border-t border-white/10 text-xs">
               <div>
-                <dt class="text-gray-400 uppercase font-medium">Tipologías</dt>
-                <dd class="text-white font-semibold mt-1">Unique &amp; Duo Suites</dd>
+                <dt class="text-gray-400 uppercase font-medium tracking-wide">Tipologías</dt>
+                <dd class="text-white font-semibold mt-1">Unique y Duo · 26 a 48 m²</dd>
               </div>
               <div>
-                <dt class="text-gray-400 uppercase font-medium">Entrega</dt>
+                <dt class="text-gray-400 uppercase font-medium tracking-wide">Unidades</dt>
+                <dd class="text-white font-semibold mt-1 tabular-nums">48 apartaestudios</dd>
+              </div>
+              <div>
+                <dt class="text-gray-400 uppercase font-medium tracking-wide">Altura</dt>
+                <dd class="text-white font-semibold mt-1 tabular-nums">5 niveles · 13,50 m</dd>
+              </div>
+              <div>
+                <dt class="text-gray-400 uppercase font-medium tracking-wide">Movilidad</dt>
+                <dd class="text-white font-semibold mt-1">Calle 100 y Autopista Norte</dd>
+              </div>
+              <div>
+                <dt class="text-gray-400 uppercase font-medium tracking-wide">Entrega</dt>
                 <dd class="text-brand-blueLight font-semibold mt-1">2027 — Preventa</dd>
               </div>
             </dl>
@@ -995,7 +1054,7 @@
           <ul class="space-y-2.5">
             <li><a href="#proyectos" class="hover:text-brand-blueLight">Proyectos en desarrollo</a></li>
             <li><a href="#simulador" class="hover:text-brand-blueLight">Simulador de Inversión</a></li>
-            <li><a href="#transformacion" class="hover:text-brand-blueLight">Scrollytelling</a></li>
+            <li><a href="#transformacion" class="hover:text-brand-blueLight">Metodología BIM</a></li>
             <li><a href="#bento" class="hover:text-brand-blueLight">Amenidades Premium</a></li>
           </ul>
         </div>
@@ -1088,6 +1147,12 @@
       appreciationOutput.textContent = formatCOP(totalAppreciation);
       monthlyIncomeOutput.textContent = formatCOP(monthlyIncome);
       totalReturnOutput.textContent = `+${totalReturnPct}%`;
+
+      // La gráfica se dibuja con los mismos parámetros: una sola fórmula, una
+      // sola verdad. Si el script aún no cargó, queda pendiente y se pinta
+      // en cuanto esté listo.
+      if (window.dibujarROI) window.dibujarROI(investment, years, modelMultiplier);
+      else window.__roiPendiente = [investment, years, modelMultiplier];
     }
 
     investmentSlider.addEventListener('input', calculateROI);
